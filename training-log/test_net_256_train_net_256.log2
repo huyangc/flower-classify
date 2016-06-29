@@ -1,0 +1,2157 @@
+/usr/bin/python2.7 /home/zheda/workspace/cnn/flower-classify/tools/test_net.py --gpu 1 --net output/default/102flowers_part_256/alexnet_iter_20000.caffemodel --def models/caffenet/cropped_256/deploy.prototxt
+Console output is saving to: /home/zheda/workspace/cnn/flower-classify/output/test_cropped_all_train_pic.txt
+Called with args:
+Namespace(caffemodel='output/default/102flowers_part_256/alexnet_iter_20000.caffemodel', gpu_id=1, part=True, prototxt='models/caffenet/cropped_256/deploy.prototxt')
+Using config:
+{'EPS': 1e-14,
+ 'EXP_DIR': 'default',
+ 'PIXEL_MEANS': [[[102.9801, 115.9465, 122.7717]]],
+ 'RNG_SEED': 3,
+ 'ROOT_DIR': '/home/zheda/workspace/cnn/flower-classify',
+ 'TEST': {'TARGET_SIZE': [227, 227]},
+ 'TRAIN': {'BATCH_SIZE': 255,
+           'SNAPSHOT_INFIX': '',
+           'SNAPSHOT_ITERS': 10000,
+           'TARGET_SIZE': [227, 227],
+           'USE_FLIPPED': True,
+           'USE_PREFETCH': False}}
+WARNING: Logging before InitGoogleLogging() is written to STDERR
+I0622 20:34:29.901057 82079 net.cpp:49] Initializing net from parameters: 
+name: "102FlowerCaffeNet"
+input: "data"
+state {
+  phase: TEST
+}
+input_shape {
+  dim: 10
+  dim: 3
+  dim: 227
+  dim: 227
+}
+layer {
+  name: "conv1"
+  type: "Convolution"
+  bottom: "data"
+  top: "conv1"
+  convolution_param {
+    num_output: 96
+    kernel_size: 11
+    stride: 4
+  }
+}
+layer {
+  name: "relu1"
+  type: "ReLU"
+  bottom: "conv1"
+  top: "conv1"
+}
+layer {
+  name: "pool1"
+  type: "Pooling"
+  bottom: "conv1"
+  top: "pool1"
+  pooling_param {
+    pool: MAX
+    kernel_size: 3
+    stride: 2
+  }
+}
+layer {
+  name: "norm1"
+  type: "LRN"
+  bottom: "pool1"
+  top: "norm1"
+  lrn_param {
+    local_size: 5
+    alpha: 0.0001
+    beta: 0.75
+  }
+}
+layer {
+  name: "conv2"
+  type: "Convolution"
+  bottom: "norm1"
+  top: "conv2"
+  convolution_param {
+    num_output: 256
+    pad: 2
+    kernel_size: 5
+    group: 2
+  }
+}
+layer {
+  name: "relu2"
+  type: "ReLU"
+  bottom: "conv2"
+  top: "conv2"
+}
+layer {
+  name: "pool2"
+  type: "Pooling"
+  bottom: "conv2"
+  top: "pool2"
+  pooling_param {
+    pool: MAX
+    kernel_size: 3
+    stride: 2
+  }
+}
+layer {
+  name: "norm2"
+  type: "LRN"
+  bottom: "pool2"
+  top: "norm2"
+  lrn_param {
+    local_size: 5
+    alpha: 0.0001
+    beta: 0.75
+  }
+}
+layer {
+  name: "conv3"
+  type: "Convolution"
+  bottom: "norm2"
+  top: "conv3"
+  convolution_param {
+    num_output: 384
+    pad: 1
+    kernel_size: 3
+  }
+}
+layer {
+  name: "relu3"
+  type: "ReLU"
+  bottom: "conv3"
+  top: "conv3"
+}
+layer {
+  name: "conv4"
+  type: "Convolution"
+  bottom: "conv3"
+  top: "conv4"
+  convolution_param {
+    num_output: 384
+    pad: 1
+    kernel_size: 3
+    group: 2
+  }
+}
+layer {
+  name: "relu4"
+  type: "ReLU"
+  bottom: "conv4"
+  top: "conv4"
+}
+layer {
+  name: "conv5"
+  type: "Convolution"
+  bottom: "conv4"
+  top: "conv5"
+  convolution_param {
+    num_output: 256
+    pad: 1
+    kernel_size: 3
+    group: 2
+  }
+}
+layer {
+  name: "relu5"
+  type: "ReLU"
+  bottom: "conv5"
+  top: "conv5"
+}
+layer {
+  name: "pool5"
+  type: "Pooling"
+  bottom: "conv5"
+  top: "pool5"
+  pooling_param {
+    pool: MAX
+    kernel_size: 3
+    stride: 2
+  }
+}
+layer {
+  name: "fc6"
+  type: "InnerProduct"
+  bottom: "pool5"
+  top: "fc6"
+  inner_product_param {
+    num_output: 4096
+  }
+}
+layer {
+  name: "relu6"
+  type: "ReLU"
+  bottom: "fc6"
+  top: "fc6"
+}
+layer {
+  name: "drop6"
+  type: "Dropout"
+  bottom: "fc6"
+  top: "fc6"
+  dropout_param {
+    dropout_ratio: 0.5
+  }
+}
+layer {
+  name: "fc7"
+  type: "InnerProduct"
+  bottom: "fc6"
+  top: "fc7"
+  inner_product_param {
+    num_output: 4096
+  }
+}
+layer {
+  name: "relu7"
+  type: "ReLU"
+  bottom: "fc7"
+  top: "fc7"
+}
+layer {
+  name: "drop7"
+  type: "Dropout"
+  bottom: "fc7"
+  top: "fc7"
+  dropout_param {
+    dropout_ratio: 0.5
+  }
+}
+layer {
+  name: "102flower"
+  type: "InnerProduct"
+  bottom: "fc7"
+  top: "102flower"
+  inner_product_param {
+    num_output: 102
+  }
+}
+layer {
+  name: "prob"
+  type: "Softmax"
+  bottom: "102flower"
+  top: "prob"
+}
+I0622 20:34:29.901137 82079 net.cpp:413] Input 0 -> data
+I0622 20:34:29.910171 82079 layer_factory.hpp:77] Creating layer conv1
+I0622 20:34:29.910207 82079 net.cpp:106] Creating Layer conv1
+I0622 20:34:29.910212 82079 net.cpp:454] conv1 <- data
+I0622 20:34:29.910219 82079 net.cpp:411] conv1 -> conv1
+I0622 20:34:30.065652 82079 net.cpp:150] Setting up conv1
+I0622 20:34:30.065690 82079 net.cpp:157] Top shape: 10 96 55 55 (2904000)
+I0622 20:34:30.065695 82079 net.cpp:165] Memory required for data: 11616000
+I0622 20:34:30.065712 82079 layer_factory.hpp:77] Creating layer relu1
+I0622 20:34:30.065726 82079 net.cpp:106] Creating Layer relu1
+I0622 20:34:30.065731 82079 net.cpp:454] relu1 <- conv1
+I0622 20:34:30.065737 82079 net.cpp:397] relu1 -> conv1 (in-place)
+I0622 20:34:30.065949 82079 net.cpp:150] Setting up relu1
+I0622 20:34:30.065958 82079 net.cpp:157] Top shape: 10 96 55 55 (2904000)
+I0622 20:34:30.065961 82079 net.cpp:165] Memory required for data: 23232000
+I0622 20:34:30.065964 82079 layer_factory.hpp:77] Creating layer pool1
+I0622 20:34:30.065974 82079 net.cpp:106] Creating Layer pool1
+I0622 20:34:30.065978 82079 net.cpp:454] pool1 <- conv1
+I0622 20:34:30.065982 82079 net.cpp:411] pool1 -> pool1
+I0622 20:34:30.066051 82079 net.cpp:150] Setting up pool1
+I0622 20:34:30.066056 82079 net.cpp:157] Top shape: 10 96 27 27 (699840)
+I0622 20:34:30.066059 82079 net.cpp:165] Memory required for data: 26031360
+I0622 20:34:30.066062 82079 layer_factory.hpp:77] Creating layer norm1
+I0622 20:34:30.066074 82079 net.cpp:106] Creating Layer norm1
+I0622 20:34:30.066077 82079 net.cpp:454] norm1 <- pool1
+I0622 20:34:30.066082 82079 net.cpp:411] norm1 -> norm1
+I0622 20:34:30.066427 82079 net.cpp:150] Setting up norm1
+I0622 20:34:30.066439 82079 net.cpp:157] Top shape: 10 96 27 27 (699840)
+I0622 20:34:30.066443 82079 net.cpp:165] Memory required for data: 28830720
+I0622 20:34:30.066447 82079 layer_factory.hpp:77] Creating layer conv2
+I0622 20:34:30.066457 82079 net.cpp:106] Creating Layer conv2
+I0622 20:34:30.066462 82079 net.cpp:454] conv2 <- norm1
+I0622 20:34:30.066467 82079 net.cpp:411] conv2 -> conv2
+I0622 20:34:30.070096 82079 net.cpp:150] Setting up conv2
+I0622 20:34:30.070132 82079 net.cpp:157] Top shape: 10 256 27 27 (1866240)
+I0622 20:34:30.070137 82079 net.cpp:165] Memory required for data: 36295680
+I0622 20:34:30.070152 82079 layer_factory.hpp:77] Creating layer relu2
+I0622 20:34:30.070163 82079 net.cpp:106] Creating Layer relu2
+I0622 20:34:30.070168 82079 net.cpp:454] relu2 <- conv2
+I0622 20:34:30.070174 82079 net.cpp:397] relu2 -> conv2 (in-place)
+I0622 20:34:30.070353 82079 net.cpp:150] Setting up relu2
+I0622 20:34:30.070360 82079 net.cpp:157] Top shape: 10 256 27 27 (1866240)
+I0622 20:34:30.070363 82079 net.cpp:165] Memory required for data: 43760640
+I0622 20:34:30.070368 82079 layer_factory.hpp:77] Creating layer pool2
+I0622 20:34:30.070374 82079 net.cpp:106] Creating Layer pool2
+I0622 20:34:30.070377 82079 net.cpp:454] pool2 <- conv2
+I0622 20:34:30.070384 82079 net.cpp:411] pool2 -> pool2
+I0622 20:34:30.070447 82079 net.cpp:150] Setting up pool2
+I0622 20:34:30.070453 82079 net.cpp:157] Top shape: 10 256 13 13 (432640)
+I0622 20:34:30.070456 82079 net.cpp:165] Memory required for data: 45491200
+I0622 20:34:30.070459 82079 layer_factory.hpp:77] Creating layer norm2
+I0622 20:34:30.070466 82079 net.cpp:106] Creating Layer norm2
+I0622 20:34:30.070469 82079 net.cpp:454] norm2 <- pool2
+I0622 20:34:30.070475 82079 net.cpp:411] norm2 -> norm2
+I0622 20:34:30.070840 82079 net.cpp:150] Setting up norm2
+I0622 20:34:30.070852 82079 net.cpp:157] Top shape: 10 256 13 13 (432640)
+I0622 20:34:30.070855 82079 net.cpp:165] Memory required for data: 47221760
+I0622 20:34:30.070859 82079 layer_factory.hpp:77] Creating layer conv3
+I0622 20:34:30.070870 82079 net.cpp:106] Creating Layer conv3
+I0622 20:34:30.070874 82079 net.cpp:454] conv3 <- norm2
+I0622 20:34:30.070879 82079 net.cpp:411] conv3 -> conv3
+I0622 20:34:30.077523 82079 net.cpp:150] Setting up conv3
+I0622 20:34:30.077563 82079 net.cpp:157] Top shape: 10 384 13 13 (648960)
+I0622 20:34:30.077566 82079 net.cpp:165] Memory required for data: 49817600
+I0622 20:34:30.077582 82079 layer_factory.hpp:77] Creating layer relu3
+I0622 20:34:30.077594 82079 net.cpp:106] Creating Layer relu3
+I0622 20:34:30.077597 82079 net.cpp:454] relu3 <- conv3
+I0622 20:34:30.077603 82079 net.cpp:397] relu3 -> conv3 (in-place)
+I0622 20:34:30.078102 82079 net.cpp:150] Setting up relu3
+I0622 20:34:30.078114 82079 net.cpp:157] Top shape: 10 384 13 13 (648960)
+I0622 20:34:30.078119 82079 net.cpp:165] Memory required for data: 52413440
+I0622 20:34:30.078121 82079 layer_factory.hpp:77] Creating layer conv4
+I0622 20:34:30.078132 82079 net.cpp:106] Creating Layer conv4
+I0622 20:34:30.078135 82079 net.cpp:454] conv4 <- conv3
+I0622 20:34:30.078141 82079 net.cpp:411] conv4 -> conv4
+I0622 20:34:30.082227 82079 net.cpp:150] Setting up conv4
+I0622 20:34:30.082265 82079 net.cpp:157] Top shape: 10 384 13 13 (648960)
+I0622 20:34:30.082270 82079 net.cpp:165] Memory required for data: 55009280
+I0622 20:34:30.082281 82079 layer_factory.hpp:77] Creating layer relu4
+I0622 20:34:30.082293 82079 net.cpp:106] Creating Layer relu4
+I0622 20:34:30.082298 82079 net.cpp:454] relu4 <- conv4
+I0622 20:34:30.082305 82079 net.cpp:397] relu4 -> conv4 (in-place)
+I0622 20:34:30.082466 82079 net.cpp:150] Setting up relu4
+I0622 20:34:30.082475 82079 net.cpp:157] Top shape: 10 384 13 13 (648960)
+I0622 20:34:30.082479 82079 net.cpp:165] Memory required for data: 57605120
+I0622 20:34:30.082481 82079 layer_factory.hpp:77] Creating layer conv5
+I0622 20:34:30.082491 82079 net.cpp:106] Creating Layer conv5
+I0622 20:34:30.082494 82079 net.cpp:454] conv5 <- conv4
+I0622 20:34:30.082500 82079 net.cpp:411] conv5 -> conv5
+I0622 20:34:30.086104 82079 net.cpp:150] Setting up conv5
+I0622 20:34:30.086141 82079 net.cpp:157] Top shape: 10 256 13 13 (432640)
+I0622 20:34:30.086145 82079 net.cpp:165] Memory required for data: 59335680
+I0622 20:34:30.086159 82079 layer_factory.hpp:77] Creating layer relu5
+I0622 20:34:30.086169 82079 net.cpp:106] Creating Layer relu5
+I0622 20:34:30.086174 82079 net.cpp:454] relu5 <- conv5
+I0622 20:34:30.086180 82079 net.cpp:397] relu5 -> conv5 (in-place)
+I0622 20:34:30.086343 82079 net.cpp:150] Setting up relu5
+I0622 20:34:30.086351 82079 net.cpp:157] Top shape: 10 256 13 13 (432640)
+I0622 20:34:30.086354 82079 net.cpp:165] Memory required for data: 61066240
+I0622 20:34:30.086357 82079 layer_factory.hpp:77] Creating layer pool5
+I0622 20:34:30.086365 82079 net.cpp:106] Creating Layer pool5
+I0622 20:34:30.086369 82079 net.cpp:454] pool5 <- conv5
+I0622 20:34:30.086374 82079 net.cpp:411] pool5 -> pool5
+I0622 20:34:30.086433 82079 net.cpp:150] Setting up pool5
+I0622 20:34:30.086439 82079 net.cpp:157] Top shape: 10 256 6 6 (92160)
+I0622 20:34:30.086442 82079 net.cpp:165] Memory required for data: 61434880
+I0622 20:34:30.086444 82079 layer_factory.hpp:77] Creating layer fc6
+I0622 20:34:30.086452 82079 net.cpp:106] Creating Layer fc6
+I0622 20:34:30.086455 82079 net.cpp:454] fc6 <- pool5
+I0622 20:34:30.086459 82079 net.cpp:411] fc6 -> fc6
+I0622 20:34:30.173220 82079 net.cpp:150] Setting up fc6
+I0622 20:34:30.173256 82079 net.cpp:157] Top shape: 10 4096 (40960)
+I0622 20:34:30.173260 82079 net.cpp:165] Memory required for data: 61598720
+I0622 20:34:30.173271 82079 layer_factory.hpp:77] Creating layer relu6
+I0622 20:34:30.173283 82079 net.cpp:106] Creating Layer relu6
+I0622 20:34:30.173287 82079 net.cpp:454] relu6 <- fc6
+I0622 20:34:30.173293 82079 net.cpp:397] relu6 -> fc6 (in-place)
+I0622 20:34:30.173782 82079 net.cpp:150] Setting up relu6
+I0622 20:34:30.173794 82079 net.cpp:157] Top shape: 10 4096 (40960)
+I0622 20:34:30.173797 82079 net.cpp:165] Memory required for data: 61762560
+I0622 20:34:30.173800 82079 layer_factory.hpp:77] Creating layer drop6
+I0622 20:34:30.173815 82079 net.cpp:106] Creating Layer drop6
+I0622 20:34:30.173817 82079 net.cpp:454] drop6 <- fc6
+I0622 20:34:30.173826 82079 net.cpp:397] drop6 -> fc6 (in-place)
+I0622 20:34:30.173863 82079 net.cpp:150] Setting up drop6
+I0622 20:34:30.173868 82079 net.cpp:157] Top shape: 10 4096 (40960)
+I0622 20:34:30.173871 82079 net.cpp:165] Memory required for data: 61926400
+I0622 20:34:30.173874 82079 layer_factory.hpp:77] Creating layer fc7
+I0622 20:34:30.173880 82079 net.cpp:106] Creating Layer fc7
+I0622 20:34:30.173882 82079 net.cpp:454] fc7 <- fc6
+I0622 20:34:30.173888 82079 net.cpp:411] fc7 -> fc7
+I0622 20:34:30.213551 82079 net.cpp:150] Setting up fc7
+I0622 20:34:30.213588 82079 net.cpp:157] Top shape: 10 4096 (40960)
+I0622 20:34:30.213592 82079 net.cpp:165] Memory required for data: 62090240
+I0622 20:34:30.213605 82079 layer_factory.hpp:77] Creating layer relu7
+I0622 20:34:30.213615 82079 net.cpp:106] Creating Layer relu7
+I0622 20:34:30.213619 82079 net.cpp:454] relu7 <- fc7
+I0622 20:34:30.213625 82079 net.cpp:397] relu7 -> fc7 (in-place)
+I0622 20:34:30.213852 82079 net.cpp:150] Setting up relu7
+I0622 20:34:30.213860 82079 net.cpp:157] Top shape: 10 4096 (40960)
+I0622 20:34:30.213863 82079 net.cpp:165] Memory required for data: 62254080
+I0622 20:34:30.213866 82079 layer_factory.hpp:77] Creating layer drop7
+I0622 20:34:30.213874 82079 net.cpp:106] Creating Layer drop7
+I0622 20:34:30.213877 82079 net.cpp:454] drop7 <- fc7
+I0622 20:34:30.213881 82079 net.cpp:397] drop7 -> fc7 (in-place)
+I0622 20:34:30.213917 82079 net.cpp:150] Setting up drop7
+I0622 20:34:30.213922 82079 net.cpp:157] Top shape: 10 4096 (40960)
+I0622 20:34:30.213925 82079 net.cpp:165] Memory required for data: 62417920
+I0622 20:34:30.213928 82079 layer_factory.hpp:77] Creating layer 102flower
+I0622 20:34:30.213938 82079 net.cpp:106] Creating Layer 102flower
+I0622 20:34:30.213942 82079 net.cpp:454] 102flower <- fc7
+I0622 20:34:30.213945 82079 net.cpp:411] 102flower -> 102flower
+I0622 20:34:30.215404 82079 net.cpp:150] Setting up 102flower
+I0622 20:34:30.215415 82079 net.cpp:157] Top shape: 10 102 (1020)
+I0622 20:34:30.215418 82079 net.cpp:165] Memory required for data: 62422000
+I0622 20:34:30.215425 82079 layer_factory.hpp:77] Creating layer prob
+I0622 20:34:30.215431 82079 net.cpp:106] Creating Layer prob
+I0622 20:34:30.215435 82079 net.cpp:454] prob <- 102flower
+I0622 20:34:30.215440 82079 net.cpp:411] prob -> prob
+I0622 20:34:30.217213 82079 net.cpp:150] Setting up prob
+I0622 20:34:30.217226 82079 net.cpp:157] Top shape: 10 102 (1020)
+I0622 20:34:30.217229 82079 net.cpp:165] Memory required for data: 62426080
+I0622 20:34:30.217233 82079 net.cpp:228] prob does not need backward computation.
+I0622 20:34:30.217236 82079 net.cpp:228] 102flower does not need backward computation.
+I0622 20:34:30.217239 82079 net.cpp:228] drop7 does not need backward computation.
+I0622 20:34:30.217242 82079 net.cpp:228] relu7 does not need backward computation.
+I0622 20:34:30.217245 82079 net.cpp:228] fc7 does not need backward computation.
+I0622 20:34:30.217249 82079 net.cpp:228] drop6 does not need backward computation.
+I0622 20:34:30.217252 82079 net.cpp:228] relu6 does not need backward computation.
+I0622 20:34:30.217255 82079 net.cpp:228] fc6 does not need backward computation.
+I0622 20:34:30.217258 82079 net.cpp:228] pool5 does not need backward computation.
+I0622 20:34:30.217262 82079 net.cpp:228] relu5 does not need backward computation.
+I0622 20:34:30.217264 82079 net.cpp:228] conv5 does not need backward computation.
+I0622 20:34:30.217268 82079 net.cpp:228] relu4 does not need backward computation.
+I0622 20:34:30.217272 82079 net.cpp:228] conv4 does not need backward computation.
+I0622 20:34:30.217274 82079 net.cpp:228] relu3 does not need backward computation.
+I0622 20:34:30.217278 82079 net.cpp:228] conv3 does not need backward computation.
+I0622 20:34:30.217281 82079 net.cpp:228] norm2 does not need backward computation.
+I0622 20:34:30.217284 82079 net.cpp:228] pool2 does not need backward computation.
+I0622 20:34:30.217288 82079 net.cpp:228] relu2 does not need backward computation.
+I0622 20:34:30.217290 82079 net.cpp:228] conv2 does not need backward computation.
+I0622 20:34:30.217294 82079 net.cpp:228] norm1 does not need backward computation.
+I0622 20:34:30.217298 82079 net.cpp:228] pool1 does not need backward computation.
+I0622 20:34:30.217300 82079 net.cpp:228] relu1 does not need backward computation.
+I0622 20:34:30.217303 82079 net.cpp:228] conv1 does not need backward computation.
+I0622 20:34:30.217306 82079 net.cpp:270] This network produces output prob
+I0622 20:34:30.217319 82079 net.cpp:283] Network initialization done.
+I0622 20:34:30.590154 82079 net.cpp:816] Ignoring source layer data
+I0622 20:34:30.630568 82079 net.cpp:816] Ignoring source layer loss
+/home/zheda/data/flower_all/102flowers/data/image_06753.jpg
+0 [66, 81, 76, 0, 0, 66, 76, 76, 76, 81, 76, 76, 76, 0, 0, 66, 0, 18]
+/home/zheda/data/flower_all/102flowers/data/image_05090.jpg
+1 [19, 41, 41, 41, 41, 19, 41, 19, 41, 41, 41]
+/home/zheda/data/flower_all/102flowers/data/image_05109.jpg
+1 [39, 39, 90, 1, 90, 90, 39, 22, 90, 1, 39, 22, 90, 22]
+/home/zheda/data/flower_all/102flowers/data/image_05110.jpg
+1 [6, 6, 6, 6, 6, 19]
+/home/zheda/data/flower_all/102flowers/data/image_05121.jpg
+1 [96]
+/home/zheda/data/flower_all/102flowers/data/image_05126.jpg
+1 [6]
+/home/zheda/data/flower_all/102flowers/data/image_05130.jpg
+1 [19, 96, 19, 96, 19]
+/home/zheda/data/flower_all/102flowers/data/image_06613.jpg
+2 [8, 8, 2, 8, 8, 8, 2, 2, 2, 8, 2]
+/home/zheda/data/flower_all/102flowers/data/image_06617.jpg
+2 [31, 31, 31, 31, 31, 31, 31, 35, 3, 31, 31, 44, 31, 31, 3, 31, 31, 31, 44, 3, 21]
+/home/zheda/data/flower_all/102flowers/data/image_06619.jpg
+2 [8, 18, 8, 8, 2, 66, 8, 8, 2, 8, 8, 2, 2]
+/home/zheda/data/flower_all/102flowers/data/image_06622.jpg
+2 [44, 44, 44, 51, 44, 44, 44, 44, 8, 51, 44]
+/home/zheda/data/flower_all/102flowers/data/image_06625.jpg
+2 [8, 8, 8, 8, 44, 44, 8, 52, 8, 97, 44, 8, 8, 8, 8, 8]
+/home/zheda/data/flower_all/102flowers/data/image_06627.jpg
+2 [85, 97, 67, 97, 97, 97, 67, 97, 97]
+/home/zheda/data/flower_all/102flowers/data/image_06629.jpg
+2 [31, 93, 3, 35, 93, 2, 93, 35, 31, 71, 35, 93, 93, 93, 93, 31, 2, 81, 93, 35, 35, 93, 35]
+/home/zheda/data/flower_all/102flowers/data/image_06637.jpg
+2 [8, 8, 8, 8, 8, 8, 8, 2, 8, 8, 8, 67, 8, 8, 2, 18, 18]
+/home/zheda/data/flower_all/102flowers/data/image_06648.jpg
+2 [0, 0, 61, 61, 2, 61, 61, 61, 61, 61, 0, 0, 0, 0, 61]
+/home/zheda/data/flower_all/102flowers/data/image_06649.jpg
+2 [61, 52, 52, 61, 2, 52, 2, 2, 52, 52, 52, 52, 52, 83, 2, 2, 95, 52, 2, 2, 61, 61, 44]
+/home/zheda/data/flower_all/102flowers/data/image_06650.jpg
+2 [27, 27, 27, 27, 27, 27]
+/home/zheda/data/flower_all/102flowers/data/image_05630.jpg
+3 [73, 73, 42, 42]
+/home/zheda/data/flower_all/102flowers/data/image_05631.jpg
+3 [3, 21, 3, 21, 21, 78, 21, 21, 3, 3, 3, 21, 3, 21, 21]
+/home/zheda/data/flower_all/102flowers/data/image_05633.jpg
+3 [3, 30, 30, 30, 30, 30]
+/home/zheda/data/flower_all/102flowers/data/image_05641.jpg
+3 [38, 38, 38, 38, 38, 94, 38, 38, 38, 94]
+/home/zheda/data/flower_all/102flowers/data/image_05643.jpg
+3 [2, 2, 2, 2, 2, 2, 2, 3]
+/home/zheda/data/flower_all/102flowers/data/image_05646.jpg
+3 [31, 31, 31, 31, 84, 31, 2, 84, 84, 84, 84, 84, 31, 3, 84, 84, 84]
+/home/zheda/data/flower_all/102flowers/data/image_05647.jpg
+3 [39, 39, 93, 39, 81, 83, 81, 81, 81, 39, 81, 79, 39, 81, 79, 93, 81]
+/home/zheda/data/flower_all/102flowers/data/image_05649.jpg
+3 [42, 42, 42, 42, 88, 42, 42, 88, 42, 42, 73, 87, 42, 42, 42, 42, 42, 42, 42, 42, 42]
+/home/zheda/data/flower_all/102flowers/data/image_05652.jpg
+3 [87, 87, 87, 83, 87, 87, 87]
+/home/zheda/data/flower_all/102flowers/data/image_05656.jpg
+3 [93, 93, 54, 93, 54, 54, 93, 93, 77, 93, 77, 54, 93, 83, 93, 93, 93, 54, 83, 83]
+/home/zheda/data/flower_all/102flowers/data/image_05660.jpg
+3 [54, 54, 75, 75, 54, 75, 54, 75, 75]
+/home/zheda/data/flower_all/102flowers/data/image_05661.jpg
+3 [43, 43, 43, 43, 43, 43, 43, 89, 43, 17, 17, 43, 43, 43, 89, 57, 43, 43, 82]
+/home/zheda/data/flower_all/102flowers/data/image_05665.jpg
+3 [31, 31, 31, 31, 31, 83, 83, 75, 31, 3, 3, 83, 31, 31, 75, 31, 31]
+/home/zheda/data/flower_all/102flowers/data/image_05667.jpg
+3 [10, 10, 61, 3, 61, 3, 61, 3, 10, 10, 61, 61, 61, 2, 61, 2]
+/home/zheda/data/flower_all/102flowers/data/image_05669.jpg
+3 [83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 83, 35, 83, 83, 73, 73]
+/home/zheda/data/flower_all/102flowers/data/image_05671.jpg
+3 [54, 54, 54, 54, 0, 54, 81, 77, 77, 0, 77, 81]
+/home/zheda/data/flower_all/102flowers/data/image_05673.jpg
+3 [31, 3, 31, 31, 31, 56, 56, 31, 31, 3, 31, 56, 3, 31, 31, 31, 56, 31, 31, 31, 56]
+/home/zheda/data/flower_all/102flowers/data/image_05675.jpg
+3 [10]
+/home/zheda/data/flower_all/102flowers/data/image_05677.jpg
+3 [2, 2, 2, 54, 3, 2, 3, 2, 2, 2, 3, 54, 2, 3]
+/home/zheda/data/flower_all/102flowers/data/image_05679.jpg
+3 [6, 6, 6, 6, 6, 6, 6, 6, 6, 35]
+/home/zheda/data/flower_all/102flowers/data/image_05680.jpg
+3 [81, 81, 81, 54, 81, 81, 81, 81, 81, 81, 81, 81, 54, 81, 81, 54, 91, 81, 54, 91, 81, 81]
+/home/zheda/data/flower_all/102flowers/data/image_05682.jpg
+3 [73, 73, 57, 10, 57, 23]
+/home/zheda/data/flower_all/102flowers/data/image_05203.jpg
+4 [58, 58, 4, 58, 58, 4, 58, 4, 4, 46, 46, 46, 58, 4, 46, 46, 4, 4, 58]
+/home/zheda/data/flower_all/102flowers/data/image_07183.jpg
+5 [20, 78, 20, 101, 20, 14, 20, 14, 14, 101, 14, 14, 20, 101, 101, 101, 14]
+/home/zheda/data/flower_all/102flowers/data/image_07187.jpg
+5 [89]
+/home/zheda/data/flower_all/102flowers/data/image_03304.jpg
+7 [98]
+/home/zheda/data/flower_all/102flowers/data/image_06399.jpg
+8 [76, 76, 92, 92, 76, 92, 76, 92, 76, 76, 76]
+/home/zheda/data/flower_all/102flowers/data/image_06402.jpg
+8 [8, 18, 8, 8, 18, 8, 18, 18, 18]
+/home/zheda/data/flower_all/102flowers/data/image_06409.jpg
+8 [18, 18, 18, 18, 18, 18, 8, 8, 8]
+/home/zheda/data/flower_all/102flowers/data/image_07106.jpg
+9 [37, 9]
+/home/zheda/data/flower_all/102flowers/data/image_03096.jpg
+10 [84, 84, 84, 35, 93, 84, 93, 3, 84, 93, 73, 3]
+/home/zheda/data/flower_all/102flowers/data/image_03103.jpg
+10 [41]
+/home/zheda/data/flower_all/102flowers/data/image_03109.jpg
+10 [2, 2, 61, 38, 38, 2, 38, 38, 2, 38, 38]
+/home/zheda/data/flower_all/102flowers/data/image_03110.jpg
+10 [10, 10, 38, 38, 38, 84, 38, 38]
+/home/zheda/data/flower_all/102flowers/data/image_03111.jpg
+10 [31, 10, 31, 31, 84, 31, 31, 10, 31, 31, 10, 31, 31, 35, 35, 10, 31, 10, 31, 44, 31, 84, 10, 84, 10, 10, 84, 10, 10, 84]
+/home/zheda/data/flower_all/102flowers/data/image_03112.jpg
+10 [61, 100, 2, 61, 100, 61, 100, 61, 100, 94, 100]
+/home/zheda/data/flower_all/102flowers/data/image_03113.jpg
+10 [61, 61, 61, 61, 61, 2, 61, 10, 61, 2, 2, 2, 52]
+/home/zheda/data/flower_all/102flowers/data/image_03118.jpg
+10 [45, 10, 10, 41, 15, 41, 15, 15, 10, 15, 15, 15]
+/home/zheda/data/flower_all/102flowers/data/image_03120.jpg
+10 [89, 89, 89, 89, 89, 89, 79, 79, 79, 89, 89]
+/home/zheda/data/flower_all/102flowers/data/image_03121.jpg
+10 [10, 10, 10, 10, 10, 10, 10, 10, 10, 84, 10, 84, 84, 3, 3, 84, 84, 84, 3, 84, 84, 84, 10, 84, 84, 10, 84, 84]
+/home/zheda/data/flower_all/102flowers/data/image_03124.jpg
+10 [42, 42, 42, 10, 31, 42, 31, 10, 42, 31, 42, 31, 10, 10, 42, 42]
+/home/zheda/data/flower_all/102flowers/data/image_03139.jpg
+10 [61, 61, 61, 61, 61, 61, 2, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61, 61]
+/home/zheda/data/flower_all/102flowers/data/image_03145.jpg
+10 [84, 84, 84, 84, 84, 10, 71, 84, 10, 84, 84, 84, 10, 71, 84, 10, 84, 84, 10, 10, 71]
+/home/zheda/data/flower_all/102flowers/data/image_03146.jpg
+10 [26, 42, 42, 57, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42]
+/home/zheda/data/flower_all/102flowers/data/image_03153.jpg
+10 [100, 100, 100, 100, 89, 89, 89, 89, 89, 89]
+/home/zheda/data/flower_all/102flowers/data/image_03154.jpg
+10 [10, 10, 100, 100, 10, 10, 10, 100, 100, 82, 10, 10, 2, 100, 100, 82, 82, 100, 100]
+/home/zheda/data/flower_all/102flowers/data/image_03158.jpg
+10 [61, 61, 61, 19, 61, 61, 61, 19, 10, 61, 61, 19, 61, 61, 61, 61, 61]
+/home/zheda/data/flower_all/102flowers/data/image_03168.jpg
+10 [10, 10, 10, 3, 3, 84, 10, 84, 3, 3, 100, 71, 84, 3, 100, 71, 3, 3, 3, 84, 3, 3, 100, 3]
+/home/zheda/data/flower_all/102flowers/data/image_03175.jpg
+10 [71, 71, 93, 91, 91, 71, 71, 71, 71, 71, 71, 71, 71, 71]
+/home/zheda/data/flower_all/102flowers/data/image_03177.jpg
+10 [89, 89, 89, 89, 96, 89, 89, 89, 89, 89, 89]
+/home/zheda/data/flower_all/102flowers/data/image_03180.jpg
+10 [10, 82, 82, 10, 82, 95, 82, 82, 82, 82, 82, 82, 95, 82]
+/home/zheda/data/flower_all/102flowers/data/image_04002.jpg
+11 [49, 11, 49, 11]
+/home/zheda/data/flower_all/102flowers/data/image_04012.jpg
+11 [101, 101, 89, 89, 101, 101]
+/home/zheda/data/flower_all/102flowers/data/image_04029.jpg
+11 [89]
+/home/zheda/data/flower_all/102flowers/data/image_05763.jpg
+12 [12, 76, 12, 76, 76, 12, 76, 12, 12, 12, 76, 76, 76]
+/home/zheda/data/flower_all/102flowers/data/image_06063.jpg
+13 [13, 13, 28, 28, 28, 28, 13, 28]
+/home/zheda/data/flower_all/102flowers/data/image_06078.jpg
+13 [13, 13, 28, 28, 28, 13, 28]
+/home/zheda/data/flower_all/102flowers/data/image_06801.jpg
+20 [98, 89, 20, 100, 89, 100, 98, 100, 100, 20, 89, 89, 89, 10, 89]
+/home/zheda/data/flower_all/102flowers/data/image_06813.jpg
+20 [20, 20, 20, 89, 20, 89, 89, 89, 20, 70, 89, 89]
+/home/zheda/data/flower_all/102flowers/data/image_06805.jpg
+20 [60, 60, 20, 60, 60, 60, 60, 20, 60, 60, 60]
+/home/zheda/data/flower_all/102flowers/data/image_03842.jpg
+16 [65, 65, 65, 16, 65, 65, 65, 65, 65, 16, 65, 65, 65, 16, 65, 65, 16, 16, 16, 65, 65]
+/home/zheda/data/flower_all/102flowers/data/image_04245.jpg
+17 [39, 39, 17, 17, 39, 39, 17, 17, 39, 39, 17, 39, 17, 17]
+/home/zheda/data/flower_all/102flowers/data/image_04248.jpg
+17 [70, 70, 14, 64, 70, 70, 62, 70, 64, 70, 14, 70, 14, 58, 64, 89, 70]
+/home/zheda/data/flower_all/102flowers/data/image_04249.jpg
+17 [45, 64, 64, 64, 64, 64, 64, 64, 64, 88, 64, 88, 88, 64, 88, 88, 88]
+/home/zheda/data/flower_all/102flowers/data/image_04253.jpg
+17 [45, 45, 45, 89, 45, 45, 45, 45, 45, 89, 89, 89, 45, 45, 45, 45]
+/home/zheda/data/flower_all/102flowers/data/image_04265.jpg
+17 [88, 88, 88, 88, 88, 88, 88]
+/home/zheda/data/flower_all/102flowers/data/image_04276.jpg
+17 [101, 101, 90, 80, 12, 17, 101, 80, 17, 90, 90, 90, 90, 101, 90, 90, 17]
+/home/zheda/data/flower_all/102flowers/data/image_04281.jpg
+17 [17, 17, 17, 89, 89, 17, 17, 89, 89, 89, 89, 89, 89, 101, 89, 89, 17, 89, 89, 89]
+/home/zheda/data/flower_all/102flowers/data/image_04283.jpg
+17 [39, 39, 39, 39, 50, 39, 1, 39, 39, 39, 39, 39, 29, 39, 39, 39]
+/home/zheda/data/flower_all/102flowers/data/image_04291.jpg
+17 [37, 37, 71, 37, 37, 71, 37, 37, 71, 18, 71, 71, 17, 71]
+/home/zheda/data/flower_all/102flowers/data/image_04293.jpg
+17 [4, 4, 4, 53, 4, 4, 4, 70, 4, 7, 53, 62, 64, 70, 64, 64]
+/home/zheda/data/flower_all/102flowers/data/image_04294.jpg
+17 [70, 70, 70, 89, 70, 89, 70, 89, 70, 70, 70, 70, 89, 70, 89, 89, 70, 89]
+/home/zheda/data/flower_all/102flowers/data/image_04295.jpg
+17 [45, 45, 45, 45, 58, 45, 88, 45, 45, 45, 70, 45, 45, 45, 45]
+/home/zheda/data/flower_all/102flowers/data/image_04314.jpg
+17 [88, 88, 88, 17, 88, 88, 88, 88, 17, 88, 17, 17, 17]
+/home/zheda/data/flower_all/102flowers/data/image_04324.jpg
+17 [88, 88, 88, 88, 88, 45, 88, 88, 88, 42, 45, 70, 42, 88]
+/home/zheda/data/flower_all/102flowers/data/image_06153.jpg
+18 [39]
+/home/zheda/data/flower_all/102flowers/data/image_06154.jpg
+18 [74, 74, 81]
+/home/zheda/data/flower_all/102flowers/data/image_06160.jpg
+18 [83, 83, 83, 83, 68, 83, 68, 19, 68]
+/home/zheda/data/flower_all/102flowers/data/image_04898.jpg
+19 [74]
+/home/zheda/data/flower_all/102flowers/data/image_04901.jpg
+19 [6, 6, 6, 6, 19, 19, 19, 19]
+/home/zheda/data/flower_all/102flowers/data/image_04921.jpg
+19 [6, 6, 6, 6]
+/home/zheda/data/flower_all/102flowers/data/image_04933.jpg
+19 [74, 74, 74]
+/home/zheda/data/flower_all/102flowers/data/image_04943.jpg
+19 [66]
+/home/zheda/data/flower_all/102flowers/data/image_05347.jpg
+21 [21, 21, 21, 21, 3, 21, 3, 21, 3, 21, 3, 3, 3, 3, 3]
+/home/zheda/data/flower_all/102flowers/data/image_03370.jpg
+22 [96, 96]
+/home/zheda/data/flower_all/102flowers/data/image_03372.jpg
+22 [90, 90, 90, 90, 90]
+/home/zheda/data/flower_all/102flowers/data/image_03378.jpg
+22 [96, 96, 96, 96, 96, 96, 96, 96]
+/home/zheda/data/flower_all/102flowers/data/image_03383.jpg
+22 [94]
+/home/zheda/data/flower_all/102flowers/data/image_03385.jpg
+22 [96]
+/home/zheda/data/flower_all/102flowers/data/image_03389.jpg
+22 [66, 66, 86, 19, 19, 86]
+/home/zheda/data/flower_all/102flowers/data/image_03408.jpg
+22 [90, 96, 90, 90, 90, 96, 96]
+/home/zheda/data/flower_all/102flowers/data/image_03447.jpg
+22 [19]
+/home/zheda/data/flower_all/102flowers/data/image_03458.jpg
+22 [96]
+/home/zheda/data/flower_all/102flowers/data/image_06581.jpg
+24 [8, 8, 8, 27, 8, 24]
+/home/zheda/data/flower_all/102flowers/data/image_06498.jpg
+25 [57, 57, 57, 25, 57, 57, 57, 88, 57, 57, 25, 57, 57, 82, 88, 25, 88, 57]
+/home/zheda/data/flower_all/102flowers/data/image_04086.jpg
+28 [13, 13, 13, 13]
+/home/zheda/data/flower_all/102flowers/data/image_04090.jpg
+28 [13, 13, 13]
+/home/zheda/data/flower_all/102flowers/data/image_04092.jpg
+28 [13, 13, 13, 13, 28, 28, 28, 28, 28, 13, 13, 13]
+/home/zheda/data/flower_all/102flowers/data/image_03460.jpg
+29 [29, 85, 29, 29, 85, 16, 29, 85, 85, 85, 29, 85, 29, 16, 85]
+/home/zheda/data/flower_all/102flowers/data/image_03461.jpg
+29 [21, 9, 21, 37, 37, 37, 21, 21, 21, 37, 32, 37, 37, 21, 21, 37, 32, 9, 37, 37, 29, 21]
+/home/zheda/data/flower_all/102flowers/data/image_03467.jpg
+29 [31, 31, 31, 31, 31, 71, 31, 31, 71, 71, 71, 71, 31, 71, 71, 31, 31, 31, 31, 31, 31, 31]
+/home/zheda/data/flower_all/102flowers/data/image_03468.jpg
+29 [23, 99, 23, 17, 89, 89, 90, 101, 89, 89, 30]
+/home/zheda/data/flower_all/102flowers/data/image_03470.jpg
+29 [21, 21, 3, 3, 3, 21, 3, 21, 3, 3, 3, 21, 21, 21]
+/home/zheda/data/flower_all/102flowers/data/image_03472.jpg
+29 [21, 21, 37, 31, 31, 31, 37, 37, 97, 31, 37]
+/home/zheda/data/flower_all/102flowers/data/image_03479.jpg
+29 [93, 93, 93, 93, 93, 93, 93, 93, 93, 93, 93, 81, 93, 93, 93, 93]
+/home/zheda/data/flower_all/102flowers/data/image_03490.jpg
+29 [82, 82, 82, 82, 82, 82, 89, 82, 82, 82, 89, 89, 82]
+/home/zheda/data/flower_all/102flowers/data/image_03491.jpg
+29 [82, 30, 30, 30, 82, 82, 82, 82, 30, 82, 91, 82, 23, 30, 30, 82, 84, 79, 23, 79, 30, 82, 30, 79, 79, 30, 79]
+/home/zheda/data/flower_all/102flowers/data/image_03492.jpg
+29 [26, 45, 45, 82, 82, 82, 45, 26, 43, 82, 82, 82, 43, 43, 26]
+/home/zheda/data/flower_all/102flowers/data/image_03493.jpg
+29 [21, 21, 71, 71, 71, 21, 21, 71, 29, 21, 21, 21, 21, 21, 21, 21, 93, 21, 21, 91, 21, 21, 21, 21, 0, 71, 21, 0, 21]
+/home/zheda/data/flower_all/102flowers/data/image_03494.jpg
+29 [29, 21, 29, 21, 21, 21, 21, 29, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21]
+/home/zheda/data/flower_all/102flowers/data/image_03497.jpg
+29 [10, 10, 10, 10, 10, 29, 84, 10, 10, 84, 84, 84, 10, 71, 84]
+/home/zheda/data/flower_all/102flowers/data/image_03498.jpg
+29 [29, 97, 29, 29, 97, 97, 29, 97, 97, 97, 21, 97, 97, 97, 21, 97, 97]
+/home/zheda/data/flower_all/102flowers/data/image_03499.jpg
+29 [29, 29, 21, 71, 21, 21, 71, 21, 21, 21, 21]
+/home/zheda/data/flower_all/102flowers/data/image_03535.jpg
+29 [31, 36, 31, 29, 17, 17, 17, 29, 17, 17, 17, 36]
+/home/zheda/data/flower_all/102flowers/data/image_03540.jpg
+29 [29, 93, 93, 29, 93, 71, 71, 93, 93, 71, 71, 71, 71, 71, 71]
+/home/zheda/data/flower_all/102flowers/data/image_03541.jpg
+29 [71, 71, 71, 71, 71, 71, 71, 81, 71, 71, 93, 71, 71, 71, 81, 71, 71]
+/home/zheda/data/flower_all/102flowers/data/image_06891.jpg
+30 [29, 29, 29, 71, 88, 30, 29, 43, 42, 30, 29]
+/home/zheda/data/flower_all/102flowers/data/image_06897.jpg
+30 [71, 71, 71, 30, 71, 17, 30, 17]
+/home/zheda/data/flower_all/102flowers/data/image_06905.jpg
+30 [29, 29, 29, 29, 29, 29, 30, 30, 29, 30, 30, 30, 30, 29, 29, 30, 30, 29, 29, 29, 29]
+/home/zheda/data/flower_all/102flowers/data/image_08066.jpg
+30 [59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59]
+/home/zheda/data/flower_all/102flowers/data/image_05591.jpg
+31 [84, 84, 84, 84, 84, 84, 57, 84, 57, 84, 84, 84, 57, 82, 84, 57, 87, 84, 84, 87, 84, 57, 84, 84]
+/home/zheda/data/flower_all/102flowers/data/image_05610.jpg
+31 [10, 84, 31, 10, 84, 84, 31, 84, 84, 84, 31]
+/home/zheda/data/flower_all/102flowers/data/image_05614.jpg
+31 [84, 84, 84, 84, 84, 84, 10, 37, 84, 84, 84, 84, 87, 84, 84]
+/home/zheda/data/flower_all/102flowers/data/image_05617.jpg
+31 [31, 50, 31, 31, 50, 50, 31, 50, 50, 24, 50, 50, 31]
+/home/zheda/data/flower_all/102flowers/data/image_05620.jpg
+31 [71, 71, 71, 82, 29, 82, 43, 81, 31]
+/home/zheda/data/flower_all/102flowers/data/image_05623.jpg
+31 [95, 50, 31, 31, 30, 31, 30, 50, 31, 50, 21, 50, 50, 50, 50, 94]
+/home/zheda/data/flower_all/102flowers/data/image_06953.jpg
+33 [85, 33, 85, 85, 33, 33, 85, 33, 85, 85, 33, 85, 85, 85, 82, 85, 85, 85, 33, 85]
+/home/zheda/data/flower_all/102flowers/data/image_04355.jpg
+35 [52]
+/home/zheda/data/flower_all/102flowers/data/image_03734.jpg
+36 [56, 56, 56, 56, 86, 91, 36, 36, 56, 36, 56, 56, 36, 36, 36]
+/home/zheda/data/flower_all/102flowers/data/image_03736.jpg
+36 [36, 36, 20, 20, 20, 20, 83, 36, 20, 36, 36, 20, 36, 20, 20, 36, 91]
+/home/zheda/data/flower_all/102flowers/data/image_05803.jpg
+37 [21, 91, 37, 21, 37, 37, 21, 21, 37, 91, 21, 37, 37, 91, 21, 91]
+/home/zheda/data/flower_all/102flowers/data/image_05827.jpg
+37 [13, 13, 13, 13, 13, 13, 37, 13, 13, 13, 37, 91, 91]
+/home/zheda/data/flower_all/102flowers/data/image_07009.jpg
+38 [44, 44, 44, 44, 84, 84, 84, 84, 39, 84, 84, 84, 38, 84, 84]
+/home/zheda/data/flower_all/102flowers/data/image_07014.jpg
+38 [86, 87, 86, 86, 87, 38, 86]
+/home/zheda/data/flower_all/102flowers/data/image_07018.jpg
+38 [71, 71, 71, 38, 95, 71, 71, 71, 71, 38, 71, 71, 38]
+/home/zheda/data/flower_all/102flowers/data/image_07040.jpg
+38 [77, 77, 77, 77, 77, 38, 77, 77, 38, 38, 38, 79, 77, 38, 1, 38, 77, 77]
+/home/zheda/data/flower_all/102flowers/data/image_07042.jpg
+38 [92, 92, 92, 38, 38, 92, 38, 33, 38]
+/home/zheda/data/flower_all/102flowers/data/image_04564.jpg
+39 [39, 39, 39, 39, 29, 29, 22, 1, 29, 71, 29, 22, 29, 37, 29, 37, 13, 37, 22, 22, 29]
+/home/zheda/data/flower_all/102flowers/data/image_04587.jpg
+39 [95, 95, 39, 95, 80, 95, 79]
+/home/zheda/data/flower_all/102flowers/data/image_04590.jpg
+39 [88, 88, 88, 88, 83, 89, 96, 89, 96, 83, 88, 79]
+/home/zheda/data/flower_all/102flowers/data/image_04598.jpg
+39 [95, 95, 95, 96, 96, 95, 95, 96, 96, 96, 96]
+/home/zheda/data/flower_all/102flowers/data/image_04601.jpg
+39 [96, 96, 96]
+/home/zheda/data/flower_all/102flowers/data/image_04607.jpg
+39 [96, 42, 96, 96, 42, 42, 96, 96, 42, 90, 96]
+/home/zheda/data/flower_all/102flowers/data/image_04620.jpg
+39 [96, 96, 88, 96, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88]
+/home/zheda/data/flower_all/102flowers/data/image_02198.jpg
+40 [82, 82, 40, 82, 40, 82, 82, 82, 40, 82, 40, 82, 82, 82, 82, 40, 23, 82, 40]
+/home/zheda/data/flower_all/102flowers/data/image_02202.jpg
+40 [40, 40, 40, 5, 5, 40, 5, 40, 5, 5, 16, 5, 5, 5, 16, 5, 40, 5]
+/home/zheda/data/flower_all/102flowers/data/image_02214.jpg
+40 [11, 11, 11, 11, 11, 11, 11, 40, 11, 40, 11, 11, 40, 11, 11]
+/home/zheda/data/flower_all/102flowers/data/image_02221.jpg
+40 [82, 82, 99, 99, 16, 82, 99, 91, 91, 82, 40, 82, 40, 40, 40]
+/home/zheda/data/flower_all/102flowers/data/image_02233.jpg
+40 [40, 40, 48, 48, 40, 48, 48, 48]
+/home/zheda/data/flower_all/102flowers/data/image_02234.jpg
+40 [30, 30, 30, 30, 90, 30, 30, 30, 30, 17, 30, 30, 30, 30, 30, 30, 30, 30, 30]
+/home/zheda/data/flower_all/102flowers/data/image_02247.jpg
+40 [40, 85, 40, 40, 85, 40, 85, 85, 40, 40, 85, 85, 85]
+/home/zheda/data/flower_all/102flowers/data/image_02289.jpg
+40 [65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65, 65]
+/home/zheda/data/flower_all/102flowers/data/image_02297.jpg
+40 [99, 99, 39, 40, 30, 30, 59, 30, 30, 30, 99, 59, 12, 12]
+/home/zheda/data/flower_all/102flowers/data/image_02299.jpg
+40 [40, 40, 17, 16, 16, 40, 16, 16, 40, 16, 16, 17, 16, 16, 17, 85, 40, 17, 17]
+/home/zheda/data/flower_all/102flowers/data/image_02314.jpg
+40 [82, 82, 82, 82, 25, 82, 25, 82, 82, 82, 82, 82, 82, 82]
+/home/zheda/data/flower_all/102flowers/data/image_05734.jpg
+41 [41, 14, 14, 14, 14, 14]
+/home/zheda/data/flower_all/102flowers/data/image_05738.jpg
+41 [14, 14, 41, 14, 41, 14, 14, 14, 14, 53, 14, 14, 14, 14]
+/home/zheda/data/flower_all/102flowers/data/image_02317.jpg
+42 [38, 42, 35, 38, 38, 35, 84, 84, 38, 38, 38, 35, 35, 84, 42, 42, 84, 84, 42]
+/home/zheda/data/flower_all/102flowers/data/image_02321.jpg
+42 [97, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30]
+/home/zheda/data/flower_all/102flowers/data/image_02323.jpg
+42 [84, 84, 87, 87, 84, 84, 87, 84, 84, 87, 87, 84, 84]
+/home/zheda/data/flower_all/102flowers/data/image_02331.jpg
+42 [73, 73, 73, 73, 73, 73, 42, 73, 42, 42, 73, 73, 59, 42, 73, 73, 73]
+/home/zheda/data/flower_all/102flowers/data/image_02337.jpg
+42 [41, 41, 41, 41, 41, 41, 41]
+/home/zheda/data/flower_all/102flowers/data/image_02341.jpg
+42 [74, 74, 95, 74, 44, 6]
+/home/zheda/data/flower_all/102flowers/data/image_02342.jpg
+42 [71, 83, 71, 71, 71, 83, 3, 23, 3, 3, 71, 71]
+/home/zheda/data/flower_all/102flowers/data/image_02344.jpg
+42 [91, 67, 31, 67, 67, 67, 91, 81, 31, 81, 29, 71, 29, 71, 29, 31, 71, 71, 71]
+/home/zheda/data/flower_all/102flowers/data/image_02345.jpg
+42 [97, 97, 67, 50, 8, 67, 97, 44, 67, 50, 97, 44, 67, 44, 44, 18, 44]
+/home/zheda/data/flower_all/102flowers/data/image_02346.jpg
+42 [74, 3, 35, 35, 74, 67, 67, 3, 74]
+/home/zheda/data/flower_all/102flowers/data/image_02348.jpg
+42 [89, 89, 25, 89, 25, 42, 25, 89, 42, 100, 25]
+/home/zheda/data/flower_all/102flowers/data/image_02351.jpg
+42 [41, 41, 15, 41, 15, 41, 41, 41, 41, 41, 41, 41, 41, 41]
+/home/zheda/data/flower_all/102flowers/data/image_02356.jpg
+42 [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8]
+/home/zheda/data/flower_all/102flowers/data/image_02358.jpg
+42 [3, 3, 3, 3, 3, 3, 42, 3, 84, 3, 3, 3, 84, 57, 57, 84, 84]
+/home/zheda/data/flower_all/102flowers/data/image_02359.jpg
+42 [41, 41, 41, 41, 41, 41, 15, 15, 41, 15, 15]
+/home/zheda/data/flower_all/102flowers/data/image_02371.jpg
+42 [25, 25, 25, 25, 25, 25, 25, 25, 100]
+/home/zheda/data/flower_all/102flowers/data/image_02372.jpg
+42 [82, 43, 82, 82, 95, 43, 82, 43, 43, 82, 82, 95, 95, 43, 82]
+/home/zheda/data/flower_all/102flowers/data/image_02376.jpg
+42 [83, 71, 43, 43, 23, 43, 43, 43, 43, 43, 43, 25, 43, 43, 43]
+/home/zheda/data/flower_all/102flowers/data/image_02377.jpg
+42 [44, 44, 44, 67, 76, 44, 44, 44, 44, 76, 44, 66, 66, 44, 66, 67, 67, 67]
+/home/zheda/data/flower_all/102flowers/data/image_02380.jpg
+42 [98, 43, 55, 98, 98, 98, 55, 43, 98, 55, 23, 98, 55, 55, 98, 55, 55, 98, 98, 43]
+/home/zheda/data/flower_all/102flowers/data/image_02381.jpg
+42 [31, 31, 31, 31, 31, 31, 31, 31, 31, 93, 35, 71, 35, 31, 35, 31, 31, 31]
+/home/zheda/data/flower_all/102flowers/data/image_02383.jpg
+42 [38, 38, 38, 38, 87, 38, 38, 77, 87, 38]
+/home/zheda/data/flower_all/102flowers/data/image_02385.jpg
+42 [71, 71, 71, 71, 71, 71, 71, 71, 71, 71, 71, 71, 91]
+/home/zheda/data/flower_all/102flowers/data/image_02388.jpg
+42 [39]
+/home/zheda/data/flower_all/102flowers/data/image_02390.jpg
+42 [92, 8, 8, 44, 44, 18, 18, 8, 8, 18, 18, 44, 8, 18, 18, 44]
+/home/zheda/data/flower_all/102flowers/data/image_02393.jpg
+42 [92, 50, 3, 35]
+/home/zheda/data/flower_all/102flowers/data/image_02397.jpg
+42 [73, 73, 73, 73, 73, 73, 73, 42, 84, 73, 73]
+/home/zheda/data/flower_all/102flowers/data/image_02399.jpg
+42 [84, 43, 84, 71, 43, 43, 71, 71, 82, 43, 43, 43]
+/home/zheda/data/flower_all/102flowers/data/image_02402.jpg
+42 [35, 38, 67, 67, 67, 35, 67, 67, 67, 67, 67, 67, 67, 67, 35, 35, 67]
+/home/zheda/data/flower_all/102flowers/data/image_02405.jpg
+42 [12, 12, 12, 17, 17, 17, 12, 30, 17, 17, 30, 17, 29, 17]
+/home/zheda/data/flower_all/102flowers/data/image_02407.jpg
+42 [71, 71, 71, 71, 3, 71, 71, 71, 71, 71, 71, 71, 71, 3, 3, 2]
+/home/zheda/data/flower_all/102flowers/data/image_02409.jpg
+42 [74, 74, 74, 95, 74, 74, 74, 44]
+/home/zheda/data/flower_all/102flowers/data/image_02412.jpg
+42 [89, 89, 42, 71, 90, 89, 89, 71, 89, 73, 90, 89, 98, 42, 42]
+/home/zheda/data/flower_all/102flowers/data/image_02415.jpg
+42 [29, 29, 23, 42, 42, 10, 29, 43, 71, 42, 10, 29]
+/home/zheda/data/flower_all/102flowers/data/image_02419.jpg
+42 [31, 31, 31, 31, 17, 35, 31, 31, 85, 31, 31]
+/home/zheda/data/flower_all/102flowers/data/image_02422.jpg
+42 [38, 38, 71, 38, 38, 38, 35, 38, 38, 38, 35, 38, 85, 38, 77, 38, 35, 77]
+/home/zheda/data/flower_all/102flowers/data/image_02425.jpg
+42 [14, 14, 14, 88, 14, 41, 14, 14, 14, 41, 41]
+/home/zheda/data/flower_all/102flowers/data/image_02426.jpg
+42 [3, 43, 3, 82, 42, 3, 3, 42, 100, 84, 3, 100, 84, 3, 3, 82, 84, 84, 3]
+/home/zheda/data/flower_all/102flowers/data/image_02427.jpg
+42 [73, 73, 73, 73, 73, 73, 42, 89, 79, 73, 73, 79]
+/home/zheda/data/flower_all/102flowers/data/image_02428.jpg
+42 [31, 31, 35, 31, 38, 44, 44, 31, 81, 91, 31, 44, 31, 71, 38, 35]
+/home/zheda/data/flower_all/102flowers/data/image_02429.jpg
+42 [67, 67, 67, 67, 67, 67, 39, 67, 35, 35, 67, 67, 67, 67, 67, 67, 35, 35, 67]
+/home/zheda/data/flower_all/102flowers/data/image_02433.jpg
+42 [84, 84, 42, 42, 84, 42, 84, 87, 42, 87, 100, 84, 42, 87, 84, 84]
+/home/zheda/data/flower_all/102flowers/data/image_02435.jpg
+42 [35, 35, 35, 38, 35, 35, 35, 35, 35, 35, 35, 35, 35, 42, 18, 35, 38, 35, 42, 35, 35, 35, 35, 51, 35, 42, 35]
+/home/zheda/data/flower_all/102flowers/data/image_02439.jpg
+42 [95, 57, 57, 57, 95, 95, 95, 95, 95, 57]
+/home/zheda/data/flower_all/102flowers/data/image_02442.jpg
+42 [93, 31, 93, 93, 93, 31, 31, 93, 93, 31, 31, 93, 93, 93, 93, 18, 93, 66, 93, 93, 31, 93, 66, 34, 93, 76]
+/home/zheda/data/flower_all/102flowers/data/image_01516.jpg
+43 [43, 55, 55, 55, 55, 55, 55, 55, 55]
+/home/zheda/data/flower_all/102flowers/data/image_01551.jpg
+43 [55, 55, 57, 55, 88, 55, 57, 57, 55, 55, 43, 55, 57, 55]
+/home/zheda/data/flower_all/102flowers/data/image_01560.jpg
+43 [43, 43, 96, 96, 96, 43, 96, 96, 96]
+/home/zheda/data/flower_all/102flowers/data/image_07137.jpg
+44 [8, 8, 8]
+/home/zheda/data/flower_all/102flowers/data/image_00953.jpg
+45 [64, 45, 64, 45, 45, 64, 45, 45, 45, 64, 15, 64, 15, 64, 64, 15, 45, 15, 64]
+/home/zheda/data/flower_all/102flowers/data/image_00962.jpg
+45 [26, 26, 14, 26, 46, 45, 45, 46, 45]
+/home/zheda/data/flower_all/102flowers/data/image_01141.jpg
+45 [45, 45, 45, 45, 17, 45, 17, 17, 82, 17, 82, 17, 82, 17, 17, 17]
+/home/zheda/data/flower_all/102flowers/data/image_04630.jpg
+47 [47, 64, 64, 47, 64, 64, 47, 64, 64]
+/home/zheda/data/flower_all/102flowers/data/image_04637.jpg
+47 [14, 14, 14, 14, 14, 14, 15, 15, 77, 14, 41, 14, 41]
+/home/zheda/data/flower_all/102flowers/data/image_04653.jpg
+47 [47, 15, 15, 45, 47, 62, 15, 47, 15, 47, 15, 41, 15]
+/home/zheda/data/flower_all/102flowers/data/image_04687.jpg
+47 [45, 45, 45, 47, 47, 45]
+/home/zheda/data/flower_all/102flowers/data/image_06297.jpg
+49 [11, 11, 11, 11, 11, 11, 11, 49]
+/home/zheda/data/flower_all/102flowers/data/image_06334.jpg
+49 [11, 11, 11, 11, 11, 11, 11, 11, 49, 11, 11]
+/home/zheda/data/flower_all/102flowers/data/image_06341.jpg
+49 [11, 11, 11, 11, 11, 11, 49, 49, 11, 40, 11, 11, 41, 40, 11, 11, 11, 11]
+/home/zheda/data/flower_all/102flowers/data/image_06345.jpg
+49 [49, 49, 49, 49, 49, 11, 11, 11, 11, 11, 11, 11]
+/home/zheda/data/flower_all/102flowers/data/image_01348.jpg
+50 [82, 82, 82, 82, 82, 82, 43, 82, 89, 82, 89, 45, 82, 82, 82, 82, 45]
+/home/zheda/data/flower_all/102flowers/data/image_03944.jpg
+50 [82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82]
+/home/zheda/data/flower_all/102flowers/data/image_03928.jpg
+50 [75, 75, 75, 75, 75, 75, 75, 75, 94, 75, 75, 31, 94, 94, 94, 75, 75, 65, 75, 75, 85]
+/home/zheda/data/flower_all/102flowers/data/image_03914.jpg
+50 [29, 29, 29, 29, 82, 82, 82, 82, 50, 82, 82, 82, 29, 82, 29, 29, 82, 82, 82, 50, 82, 50, 82, 82]
+/home/zheda/data/flower_all/102flowers/data/image_01378.jpg
+50 [82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82]
+/home/zheda/data/flower_all/102flowers/data/image_01343.jpg
+50 [82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82]
+/home/zheda/data/flower_all/102flowers/data/image_03945.jpg
+50 [82, 82, 82, 82, 85, 85, 85, 82, 85, 82, 82, 90, 82, 82, 82, 90, 90, 90, 82]
+/home/zheda/data/flower_all/102flowers/data/image_01344.jpg
+50 [82, 82, 82, 82, 82, 82, 82, 82]
+/home/zheda/data/flower_all/102flowers/data/image_03976.jpg
+50 [82, 82, 82, 82, 82, 82, 82, 85, 75, 85, 82, 85, 82, 82, 82, 85, 82, 85, 82, 85, 85, 82]
+/home/zheda/data/flower_all/102flowers/data/image_01320.jpg
+50 [94, 94, 50, 94, 94, 94, 94, 74]
+/home/zheda/data/flower_all/102flowers/data/image_03963.jpg
+50 [50, 50, 97, 97, 97, 44, 97, 44, 44, 2, 18, 97]
+/home/zheda/data/flower_all/102flowers/data/image_01332.jpg
+50 [82, 43, 82, 71, 82, 71, 71, 85, 82, 95]
+/home/zheda/data/flower_all/102flowers/data/image_03980.jpg
+50 [82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82]
+/home/zheda/data/flower_all/102flowers/data/image_03930.jpg
+50 [31, 31, 65, 31, 31, 18, 33, 50, 31, 50, 75, 33, 18, 31, 50, 50, 50]
+/home/zheda/data/flower_all/102flowers/data/image_03927.jpg
+50 [8, 8, 8, 50, 8, 8, 8, 8, 8, 50, 8, 8, 54, 8, 8, 8, 18, 51, 8]
+/home/zheda/data/flower_all/102flowers/data/image_01361.jpg
+50 [82, 82, 82, 95, 82, 82, 82]
+/home/zheda/data/flower_all/102flowers/data/image_03956.jpg
+50 [82, 82, 71, 82, 82, 31, 82, 82, 85, 82, 85, 82, 85, 85]
+/home/zheda/data/flower_all/102flowers/data/image_01346.jpg
+50 [82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82]
+/home/zheda/data/flower_all/102flowers/data/image_01342.jpg
+50 [82, 82, 82, 82, 82, 82, 82, 82]
+/home/zheda/data/flower_all/102flowers/data/image_01365.jpg
+50 [57, 57, 57, 57, 43, 43, 82, 82, 43, 43, 43, 43, 82, 82, 57, 43, 43, 71]
+/home/zheda/data/flower_all/102flowers/data/image_03918.jpg
+50 [50, 50, 50, 76, 76, 76, 76, 76, 76, 28, 28, 76, 76, 76, 76, 76, 76, 13, 28, 76, 76, 28, 13, 13, 13, 13]
+/home/zheda/data/flower_all/102flowers/data/image_03983.jpg
+50 [71, 71, 71, 71, 71, 71, 71, 43, 71, 75, 71, 81, 71]
+/home/zheda/data/flower_all/102flowers/data/image_03917.jpg
+50 [29, 85, 85, 50, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85]
+/home/zheda/data/flower_all/102flowers/data/image_01362.jpg
+50 [82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 95, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82]
+/home/zheda/data/flower_all/102flowers/data/image_01360.jpg
+50 [82, 82, 82, 82, 82, 82, 29]
+/home/zheda/data/flower_all/102flowers/data/image_03942.jpg
+50 [29, 99, 81, 81, 81, 81, 99, 81, 81, 82, 81, 99, 81, 81, 81, 81, 99]
+/home/zheda/data/flower_all/102flowers/data/image_03919.jpg
+50 [43, 43, 82, 43, 43, 85, 82, 82, 43, 91, 43, 43, 43, 91, 43, 43]
+/home/zheda/data/flower_all/102flowers/data/image_03973.jpg
+50 [3, 71, 71, 71, 3, 3, 3, 97, 3, 3, 3, 71, 82, 82, 71, 71, 82]
+/home/zheda/data/flower_all/102flowers/data/image_03992.jpg
+50 [85, 94, 94, 85, 85, 93, 93, 93, 82, 85, 71, 81]
+/home/zheda/data/flower_all/102flowers/data/image_03966.jpg
+50 [97, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+/home/zheda/data/flower_all/102flowers/data/image_01350.jpg
+50 [50, 50, 85, 85, 85, 85, 85, 76, 81, 85, 93, 85, 85, 85]
+/home/zheda/data/flower_all/102flowers/data/image_01337.jpg
+50 [82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82]
+/home/zheda/data/flower_all/102flowers/data/image_03920.jpg
+50 [82, 82, 82, 82, 82, 82, 82, 82, 82, 81, 82, 82, 82, 81, 81]
+/home/zheda/data/flower_all/102flowers/data/image_03988.jpg
+50 [97, 54, 54, 97, 97, 97, 54, 97, 97, 54, 50, 97, 54, 97, 54, 54, 54, 54, 97]
+/home/zheda/data/flower_all/102flowers/data/image_03962.jpg
+50 [82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82]
+/home/zheda/data/flower_all/102flowers/data/image_03953.jpg
+50 [76, 76, 50, 76, 76, 76, 50, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76, 76]
+/home/zheda/data/flower_all/102flowers/data/image_01329.jpg
+50 [82, 82, 82, 82, 82, 82, 82, 73, 82, 82, 82, 82, 82, 82]
+/home/zheda/data/flower_all/102flowers/data/image_03946.jpg
+50 [52, 52, 27, 18, 27, 18, 50, 18, 18, 27, 18, 18, 18, 52]
+/home/zheda/data/flower_all/102flowers/data/image_03993.jpg
+50 [76, 97, 76, 39, 76, 39, 39, 39, 39]
+/home/zheda/data/flower_all/102flowers/data/image_01341.jpg
+50 [82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82]
+/home/zheda/data/flower_all/102flowers/data/image_03938.jpg
+50 [82, 82, 82, 82, 50, 82, 50, 82, 82, 82, 82, 82, 29, 29, 50, 29, 50, 82, 82, 85]
+/home/zheda/data/flower_all/102flowers/data/image_03916.jpg
+50 [0, 0, 0, 54, 54, 75, 54, 18, 0, 0, 54, 54, 0, 54, 0, 54]
+/home/zheda/data/flower_all/102flowers/data/image_03952.jpg
+50 [97, 71, 71, 97, 97, 71, 71, 71, 71, 71, 71, 94, 71, 97, 71, 71, 71, 71, 71, 0, 0, 0]
+/home/zheda/data/flower_all/102flowers/data/image_03951.jpg
+50 [82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82]
+/home/zheda/data/flower_all/102flowers/data/image_03924.jpg
+50 [84, 84, 84, 71, 71, 50, 71, 50, 84, 71, 50, 50, 71, 50]
+/home/zheda/data/flower_all/102flowers/data/image_01328.jpg
+50 [82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82]
+/home/zheda/data/flower_all/102flowers/data/image_03948.jpg
+50 [82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82]
+/home/zheda/data/flower_all/102flowers/data/image_01339.jpg
+50 [82, 43, 82, 82, 84, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82]
+/home/zheda/data/flower_all/102flowers/data/image_01331.jpg
+50 [82, 82, 82, 82, 82, 85, 82, 82, 82, 82, 82, 85, 82, 82, 82, 82, 82, 82, 85]
+/home/zheda/data/flower_all/102flowers/data/image_01363.jpg
+50 [82, 82, 57, 82, 82, 57, 82, 87, 82, 82, 82, 82, 82]
+/home/zheda/data/flower_all/102flowers/data/image_01347.jpg
+50 [82, 82, 82, 82, 10, 82, 10, 82, 10, 82, 82, 82, 82, 82, 10, 43, 82, 82, 82, 82, 82, 82, 82, 10, 10]
+/home/zheda/data/flower_all/102flowers/data/image_01370.jpg
+50 [57, 57, 43, 43, 95, 71, 82, 57, 57, 71, 82, 71, 57, 82, 57, 57, 57, 57, 57, 57, 57, 57, 71]
+/home/zheda/data/flower_all/102flowers/data/image_03981.jpg
+50 [82, 82, 85, 82, 82, 85, 85, 85, 82, 82, 82]
+/home/zheda/data/flower_all/102flowers/data/image_03961.jpg
+50 [35, 10, 35, 35, 35, 35, 35, 10, 35, 35, 10, 35, 35, 35, 10, 10, 82, 82]
+/home/zheda/data/flower_all/102flowers/data/image_03978.jpg
+50 [82, 82, 82, 97, 82, 29, 82, 29, 82, 82, 82, 82, 82, 82, 82, 81, 85]
+/home/zheda/data/flower_all/102flowers/data/image_03921.jpg
+50 [82, 82, 43, 82, 31, 43, 43, 43, 43, 75]
+/home/zheda/data/flower_all/102flowers/data/image_01353.jpg
+50 [29, 29, 85, 29, 85, 29, 29, 29, 29, 71, 85, 85, 85]
+/home/zheda/data/flower_all/102flowers/data/image_03974.jpg
+50 [82, 43, 82, 82, 82, 82, 82, 82, 71, 97, 82, 82, 82, 82, 43, 71, 71, 71, 82, 82]
+/home/zheda/data/flower_all/102flowers/data/image_01373.jpg
+50 [43, 43, 43, 10, 43, 84, 43, 10, 43, 43, 43, 10, 71, 89, 43, 71, 43, 84, 71, 43]
+/home/zheda/data/flower_all/102flowers/data/image_03986.jpg
+50 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+/home/zheda/data/flower_all/102flowers/data/image_03979.jpg
+50 [82, 82, 82, 52, 82, 82, 52, 50, 82, 50, 82, 50, 50, 75, 82, 82]
+/home/zheda/data/flower_all/102flowers/data/image_01357.jpg
+50 [85, 85, 85, 85, 85, 81, 81, 81, 85, 81, 85, 81, 85, 81, 81, 81, 85, 81, 81, 50, 81, 85, 85, 85, 81, 85, 85, 50, 81, 81]
+/home/zheda/data/flower_all/102flowers/data/image_03931.jpg
+50 [61, 61, 61, 52, 52, 50, 61, 94, 52, 52, 52, 61, 52, 52]
+/home/zheda/data/flower_all/102flowers/data/image_03959.jpg
+50 [29, 82, 82, 29, 10, 82, 10, 82, 82, 29, 10, 82, 82, 10, 29, 10]
+/home/zheda/data/flower_all/102flowers/data/image_03990.jpg
+50 [31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 81, 31, 81, 0, 50, 31, 18, 85, 97]
+/home/zheda/data/flower_all/102flowers/data/image_03984.jpg
+50 [43, 43, 82, 43]
+/home/zheda/data/flower_all/102flowers/data/image_01359.jpg
+50 [93, 0, 93, 0, 81, 82, 71, 0, 0, 85, 71, 85, 85, 85, 85, 85, 85, 71, 71, 71, 81, 81, 97, 81]
+/home/zheda/data/flower_all/102flowers/data/image_03933.jpg
+50 [76, 76, 76, 76, 76, 53, 18, 76, 18, 76, 18, 76, 18, 76, 18, 18, 18, 76, 76, 53, 18, 28]
+/home/zheda/data/flower_all/102flowers/data/image_01333.jpg
+50 [57, 57, 57, 57, 71, 71, 71, 82, 57, 71, 57, 82, 95, 82, 82, 82, 95]
+/home/zheda/data/flower_all/102flowers/data/image_01336.jpg
+50 [29, 29, 29, 29, 29, 82, 29, 29, 29, 82, 29, 85]
+/home/zheda/data/flower_all/102flowers/data/image_01345.jpg
+50 [82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 95, 82, 95]
+/home/zheda/data/flower_all/102flowers/data/image_03941.jpg
+50 [50, 50, 8, 18, 18, 50, 50, 50, 50, 8, 18, 50, 8, 18, 18, 18, 18, 18]
+/home/zheda/data/flower_all/102flowers/data/image_03958.jpg
+50 [31, 75, 31, 31, 85, 31, 31, 31, 85, 31, 31, 31, 31, 31, 31, 31, 31]
+/home/zheda/data/flower_all/102flowers/data/image_01372.jpg
+50 [82, 82, 82, 10, 82, 82, 26, 82, 82, 82, 82]
+/home/zheda/data/flower_all/102flowers/data/image_01349.jpg
+50 [55, 55, 17, 82, 55, 82, 82, 43, 82, 55, 82]
+/home/zheda/data/flower_all/102flowers/data/image_01369.jpg
+50 [82, 82, 57, 57, 57, 57, 57, 57, 57, 57, 57, 57]
+/home/zheda/data/flower_all/102flowers/data/image_01340.jpg
+50 [82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82]
+/home/zheda/data/flower_all/102flowers/data/image_01364.jpg
+50 [82, 82, 57, 82, 57, 82, 82, 82, 82, 57]
+/home/zheda/data/flower_all/102flowers/data/image_03940.jpg
+50 [50, 50, 44, 75, 75, 75, 44, 75, 50, 75, 82, 75, 75, 50, 26]
+/home/zheda/data/flower_all/102flowers/data/image_03969.jpg
+50 [82, 85, 82, 82, 85, 82, 85, 85, 85, 85, 85, 85, 85, 85, 75]
+/home/zheda/data/flower_all/102flowers/data/image_03970.jpg
+50 [31, 31, 31, 85, 31, 31, 31, 31, 85, 85, 31, 31, 31]
+/home/zheda/data/flower_all/102flowers/data/image_01374.jpg
+50 [31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 75, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31, 31]
+/home/zheda/data/flower_all/102flowers/data/image_01482.jpg
+50 [82, 82, 82, 82, 82, 82, 82, 82, 95, 82, 81]
+/home/zheda/data/flower_all/102flowers/data/image_03949.jpg
+50 [82, 57, 82, 82, 82, 82, 82, 43, 57, 57, 82, 82, 82, 82, 10, 82]
+/home/zheda/data/flower_all/102flowers/data/image_01358.jpg
+50 [97, 97, 81, 97, 13, 81, 97, 21, 97, 81, 97, 97, 81, 81, 50, 50, 81, 81, 81, 81]
+/home/zheda/data/flower_all/102flowers/data/image_03937.jpg
+50 [82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 43, 82, 82, 82, 82, 82, 82, 82, 82, 82, 85]
+/home/zheda/data/flower_all/102flowers/data/image_01356.jpg
+50 [82, 82, 0, 71, 0, 0, 0, 0, 0, 82, 71, 0, 71, 71, 71, 0, 82, 71, 85, 71]
+/home/zheda/data/flower_all/102flowers/data/image_01338.jpg
+50 [82, 82, 82, 82, 82, 71, 71, 73]
+/home/zheda/data/flower_all/102flowers/data/image_03991.jpg
+50 [82, 82, 82, 75, 75, 75, 75, 75, 75, 82, 82, 75, 75, 50, 75, 75, 75, 75, 31, 31, 50, 50, 50]
+/home/zheda/data/flower_all/102flowers/data/image_01334.jpg
+50 [43, 43, 82, 43, 82, 82, 57, 82, 82, 43, 82, 82, 82, 43, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82]
+/home/zheda/data/flower_all/102flowers/data/image_01366.jpg
+50 [82, 71, 82, 82, 82, 71, 82, 82, 71, 71]
+/home/zheda/data/flower_all/102flowers/data/image_01330.jpg
+50 [82, 82, 82, 82, 82, 85, 82, 82, 85, 85, 82, 82, 85, 82, 82, 95, 85, 85, 82, 85, 82]
+/home/zheda/data/flower_all/102flowers/data/image_03947.jpg
+50 [85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 85, 82, 85, 85, 85]
+/home/zheda/data/flower_all/102flowers/data/image_01351.jpg
+50 [71, 71, 71, 0, 71, 71, 71, 71, 71, 71, 71, 71, 0, 71, 0, 0, 0]
+/home/zheda/data/flower_all/102flowers/data/image_01480.jpg
+50 [74]
+/home/zheda/data/flower_all/102flowers/data/image_03925.jpg
+50 [85, 85, 0, 85, 85, 85, 85, 85, 85, 85, 0, 85, 85, 85, 85, 85, 50, 50, 39, 85]
+/home/zheda/data/flower_all/102flowers/data/image_03934.jpg
+50 [31, 31, 43, 75, 75, 31, 94, 75, 75, 94, 31, 31, 75, 75, 75, 75]
+/home/zheda/data/flower_all/102flowers/data/image_03929.jpg
+50 [82, 82, 82, 82, 85, 82, 82, 82, 82, 82, 85, 85, 85, 85, 82, 85]
+/home/zheda/data/flower_all/102flowers/data/image_01355.jpg
+50 [82, 82, 82, 17, 82, 82, 10, 26, 97, 71, 82, 90, 10, 26]
+/home/zheda/data/flower_all/102flowers/data/image_03954.jpg
+50 [82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 71, 82, 82, 82]
+/home/zheda/data/flower_all/102flowers/data/image_03977.jpg
+50 [50, 50, 50, 50, 50, 0, 50, 0, 50, 0, 0, 0, 0, 0, 0, 0, 44, 0, 0, 0]
+/home/zheda/data/flower_all/102flowers/data/image_01483.jpg
+50 [82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82]
+/home/zheda/data/flower_all/102flowers/data/image_03971.jpg
+50 [29, 29, 82, 50, 50, 29, 0, 29, 82, 50, 0, 97, 82]
+/home/zheda/data/flower_all/102flowers/data/image_03982.jpg
+50 [97, 97, 71, 85, 81, 97, 97, 97, 81, 97, 97, 81]
+/home/zheda/data/flower_all/102flowers/data/image_03926.jpg
+50 [92, 75, 75, 85, 85, 31, 85, 31, 85, 85, 33, 31, 85, 85, 85, 31, 85, 85]
+/home/zheda/data/flower_all/102flowers/data/image_01375.jpg
+50 [82, 82, 82, 82, 31, 82, 31, 31, 75, 81, 71, 82, 82, 31, 82, 71, 82, 81, 31, 71, 81, 82, 81, 82, 81, 81]
+/home/zheda/data/flower_all/102flowers/data/image_03932.jpg
+50 [82, 82, 82, 82, 82, 82, 91]
+/home/zheda/data/flower_all/102flowers/data/image_01379.jpg
+50 [57, 57, 57, 57, 57, 57, 43, 57, 55, 82, 43, 55, 55, 43, 88, 88, 88, 43]
+/home/zheda/data/flower_all/102flowers/data/image_03960.jpg
+50 [71, 71, 71, 29, 82, 82, 71, 29, 29]
+/home/zheda/data/flower_all/102flowers/data/image_04230.jpg
+51 [63, 63, 51, 63, 63, 68]
+/home/zheda/data/flower_all/102flowers/data/image_04237.jpg
+51 [61, 61, 51, 31, 50, 80, 80, 83, 3, 83, 94, 2]
+/home/zheda/data/flower_all/102flowers/data/image_03641.jpg
+52 [45, 88, 88, 88, 88, 88, 45, 88, 88, 88, 45]
+/home/zheda/data/flower_all/102flowers/data/image_03642.jpg
+52 [45, 45, 45, 45, 45, 88, 45, 88, 45, 45, 88, 45]
+/home/zheda/data/flower_all/102flowers/data/image_03643.jpg
+52 [45, 45, 45, 45, 45, 45, 45, 45, 45, 45, 88, 59, 88, 45, 45, 45, 45]
+/home/zheda/data/flower_all/102flowers/data/image_03648.jpg
+52 [45, 88, 45, 88, 45, 45, 4, 45, 88, 45]
+/home/zheda/data/flower_all/102flowers/data/image_03649.jpg
+52 [45, 45, 45, 45, 45, 88, 45, 45, 45, 88, 45, 45, 88, 88]
+/home/zheda/data/flower_all/102flowers/data/image_03655.jpg
+52 [45, 45, 45, 45, 45, 4, 45, 88, 45, 88, 4, 45, 88, 88]
+/home/zheda/data/flower_all/102flowers/data/image_03656.jpg
+52 [61, 61, 52, 61, 61, 61, 61, 61, 61, 52, 61, 94, 61, 52, 52, 52, 10, 52, 94, 61, 52, 52]
+/home/zheda/data/flower_all/102flowers/data/image_03657.jpg
+52 [46, 46, 46, 45, 26, 26, 26, 45, 26, 52, 45, 45, 45, 52, 45, 45, 46, 52, 45, 45, 26]
+/home/zheda/data/flower_all/102flowers/data/image_03660.jpg
+52 [45, 52, 45, 45, 45, 45, 45, 45, 52, 45, 45, 45, 45, 45, 45]
+/home/zheda/data/flower_all/102flowers/data/image_03661.jpg
+52 [26, 46, 45, 45, 26, 46, 45, 45, 45, 45, 45]
+/home/zheda/data/flower_all/102flowers/data/image_03662.jpg
+52 [61, 61, 61, 61, 84, 2, 61, 61, 61, 61]
+/home/zheda/data/flower_all/102flowers/data/image_03665.jpg
+52 [88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88]
+/home/zheda/data/flower_all/102flowers/data/image_03668.jpg
+52 [61, 61, 61, 60, 61, 61, 10, 61, 61, 81, 61, 83, 39, 71, 61, 60, 81, 52, 61, 61, 52, 81]
+/home/zheda/data/flower_all/102flowers/data/image_03669.jpg
+52 [47, 47, 47, 47, 47, 47, 47, 47, 47, 47]
+/home/zheda/data/flower_all/102flowers/data/image_03671.jpg
+52 [64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 88, 64, 88, 64, 88]
+/home/zheda/data/flower_all/102flowers/data/image_03672.jpg
+52 [52, 88, 88, 88, 88, 88, 64, 45, 64, 64, 88, 88, 45, 45, 88]
+/home/zheda/data/flower_all/102flowers/data/image_03674.jpg
+52 [41, 15, 52, 41, 41, 47, 41, 52, 15, 15, 15]
+/home/zheda/data/flower_all/102flowers/data/image_03676.jpg
+52 [46, 52, 45, 52, 45, 45, 52, 45, 45, 52, 88, 45, 45, 45, 45, 52, 52, 45]
+/home/zheda/data/flower_all/102flowers/data/image_03677.jpg
+52 [10, 10, 10, 10, 10, 10, 10, 82, 10, 10, 10, 10]
+/home/zheda/data/flower_all/102flowers/data/image_03678.jpg
+52 [57, 57, 88, 88, 45, 88, 45, 88, 88, 45, 45, 88, 88, 88, 45, 88, 88, 88, 88]
+/home/zheda/data/flower_all/102flowers/data/image_03680.jpg
+52 [0, 0, 0, 0, 0, 94, 52, 0, 0, 95, 0, 94, 0, 0, 89, 0, 0]
+/home/zheda/data/flower_all/102flowers/data/image_03682.jpg
+52 [61, 0, 0, 0, 0, 0, 94, 61, 94, 94, 61, 94, 0, 0, 61, 94, 0, 94, 75]
+/home/zheda/data/flower_all/102flowers/data/image_03686.jpg
+52 [61, 61, 61, 61, 61, 61, 61, 61, 61, 0, 61, 61, 0, 0, 0, 61, 0]
+/home/zheda/data/flower_all/102flowers/data/image_03693.jpg
+52 [61, 61, 61, 10, 61, 61, 52, 61, 94, 61, 61, 2]
+/home/zheda/data/flower_all/102flowers/data/image_03698.jpg
+52 [88, 88, 88, 88, 88, 88, 88, 88, 88]
+/home/zheda/data/flower_all/102flowers/data/image_03703.jpg
+52 [88, 88, 88, 25, 88, 88, 100, 100, 100, 100]
+/home/zheda/data/flower_all/102flowers/data/image_03706.jpg
+52 [52, 88, 52, 88, 88, 88, 88, 88, 88, 88, 88, 88, 64, 88, 88, 88]
+/home/zheda/data/flower_all/102flowers/data/image_03715.jpg
+52 [52, 52, 52, 27, 52, 27, 52, 27, 52, 52, 27, 52, 27, 27, 27, 27, 27]
+/home/zheda/data/flower_all/102flowers/data/image_03720.jpg
+52 [47, 47, 47, 41, 47, 41, 41, 41]
+/home/zheda/data/flower_all/102flowers/data/image_03727.jpg
+52 [61, 61, 52, 61, 52, 61, 61, 52, 52, 52, 61, 0, 61, 0, 52, 61, 61, 52]
+/home/zheda/data/flower_all/102flowers/data/image_03732.jpg
+52 [15, 15, 15, 88, 15, 15, 88, 40, 40]
+/home/zheda/data/flower_all/102flowers/data/image_08124.jpg
+56 [36, 36, 36, 56, 36, 56, 36, 56, 56, 36]
+/home/zheda/data/flower_all/102flowers/data/image_08144.jpg
+56 [56, 56, 31, 31, 32, 31, 16, 81, 81, 31, 36, 81, 31, 31, 31, 56, 56, 31, 81, 36]
+/home/zheda/data/flower_all/102flowers/data/image_08151.jpg
+61 [69, 74, 69, 69, 69, 68, 61, 61, 19]
+/home/zheda/data/flower_all/102flowers/data/image_08160.jpg
+61 [61, 83, 83, 68, 83, 68]
+/home/zheda/data/flower_all/102flowers/data/image_08184.jpg
+61 [63, 63, 95, 63, 61, 63, 63, 95, 61]
+/home/zheda/data/flower_all/102flowers/data/image_08189.jpg
+61 [61, 69, 61, 61, 61, 69, 52, 69, 52, 69, 69, 52, 69]
+/home/zheda/data/flower_all/102flowers/data/image_03205.jpg
+64 [15, 15, 15, 15, 4, 15, 15, 15, 15, 4, 15, 64, 15, 15, 15, 15, 15, 15]
+/home/zheda/data/flower_all/102flowers/data/image_03216.jpg
+64 [62, 64]
+/home/zheda/data/flower_all/102flowers/data/image_03257.jpg
+64 [64, 64, 64, 15, 15, 15, 15, 15]
+/home/zheda/data/flower_all/102flowers/data/image_07050.jpg
+66 [66, 2, 2, 2, 2, 35, 2, 2, 35, 2]
+/home/zheda/data/flower_all/102flowers/data/image_07055.jpg
+66 [44, 66, 44, 44, 44, 44, 44, 44, 44, 66, 44, 66, 44, 44, 66, 66, 44, 44, 44, 66, 66, 66, 44]
+/home/zheda/data/flower_all/102flowers/data/image_07057.jpg
+66 [19, 19, 66, 63, 63, 66, 63, 63, 63, 66]
+/home/zheda/data/flower_all/102flowers/data/image_07064.jpg
+66 [66, 44, 44, 44, 66, 44, 2, 44, 2, 66, 66, 44, 44, 44]
+/home/zheda/data/flower_all/102flowers/data/image_07072.jpg
+66 [44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 66, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44]
+/home/zheda/data/flower_all/102flowers/data/image_07079.jpg
+66 [99, 99, 1, 67, 66, 66, 76, 1, 76, 66, 1, 66, 99, 67, 67, 67, 76, 67, 67, 67, 67, 99, 11, 66]
+/home/zheda/data/flower_all/102flowers/data/image_07081.jpg
+66 [21, 8, 66, 21, 66, 92, 8, 66, 92, 8, 21, 8, 66, 66, 8]
+/home/zheda/data/flower_all/102flowers/data/image_05903.jpg
+67 [3, 8, 3, 3, 3, 3, 3, 8, 3, 8, 3, 3, 3, 3, 8, 3, 8, 3, 8, 8, 3]
+/home/zheda/data/flower_all/102flowers/data/image_05924.jpg
+67 [67, 67, 67, 50, 50, 50, 61, 50, 97, 50, 90, 50, 90]
+/home/zheda/data/flower_all/102flowers/data/image_05942.jpg
+67 [97, 67, 67, 97, 27, 97, 97, 97]
+/home/zheda/data/flower_all/102flowers/data/image_05943.jpg
+67 [67, 67, 44, 67, 44, 44, 44, 44, 44, 97, 39]
+/home/zheda/data/flower_all/102flowers/data/image_05944.jpg
+67 [74, 74, 67, 74, 96, 67, 96, 74]
+/home/zheda/data/flower_all/102flowers/data/image_05949.jpg
+67 [69, 69, 69, 69, 61, 50, 61, 67, 69, 69, 61, 67]
+/home/zheda/data/flower_all/102flowers/data/image_05952.jpg
+67 [67, 15, 15, 10, 10, 15, 15, 15, 10, 10, 47, 15, 10]
+/home/zheda/data/flower_all/102flowers/data/image_05953.jpg
+67 [97, 97, 97, 97, 97, 97, 97, 97]
+/home/zheda/data/flower_all/102flowers/data/image_05955.jpg
+67 [8, 97, 97, 8, 8, 8, 8, 8, 97, 8, 8, 67, 97, 92, 67, 97, 21, 8]
+/home/zheda/data/flower_all/102flowers/data/image_05278.jpg
+69 [69, 68, 69, 68, 69, 68, 69, 69, 68, 68, 68, 0, 50, 68, 50, 50, 30]
+/home/zheda/data/flower_all/102flowers/data/image_04542.jpg
+70 [101, 101, 101, 101, 101, 101, 101, 101, 101]
+/home/zheda/data/flower_all/102flowers/data/image_03546.jpg
+71 [81, 81, 81, 50, 81, 50, 81, 67, 81, 81, 81, 81, 81, 50, 50]
+/home/zheda/data/flower_all/102flowers/data/image_03547.jpg
+71 [30, 30, 43, 43, 89, 43, 30, 89, 89, 89, 89, 43, 90, 89, 43, 30, 82]
+/home/zheda/data/flower_all/102flowers/data/image_03554.jpg
+71 [84, 84, 57, 17, 71, 82, 57, 57, 25, 57, 57, 57, 82]
+/home/zheda/data/flower_all/102flowers/data/image_03557.jpg
+71 [26, 89, 89, 26, 26, 72, 89, 89, 26, 26, 15, 41, 15]
+/home/zheda/data/flower_all/102flowers/data/image_03560.jpg
+71 [31, 71, 71, 31, 31, 31, 31, 71, 17, 56, 17, 31, 91, 71, 91, 17, 17]
+/home/zheda/data/flower_all/102flowers/data/image_03565.jpg
+71 [28, 28, 28, 28, 28, 30, 67, 71, 67, 42, 30, 28, 71, 71, 67, 71, 71, 67, 89, 96]
+/home/zheda/data/flower_all/102flowers/data/image_03567.jpg
+71 [17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 71, 17]
+/home/zheda/data/flower_all/102flowers/data/image_03572.jpg
+71 [94, 94, 68]
+/home/zheda/data/flower_all/102flowers/data/image_03577.jpg
+71 [91, 30, 10, 71, 91, 30, 91, 10, 91, 91, 10, 91, 10, 91, 17, 91, 17, 10, 91, 71, 91, 10]
+/home/zheda/data/flower_all/102flowers/data/image_03580.jpg
+71 [95, 50, 50, 50, 50, 50, 50, 72, 50, 72, 50, 50, 50, 72, 0]
+/home/zheda/data/flower_all/102flowers/data/image_03586.jpg
+71 [30, 45, 71, 30, 30, 30, 71, 71, 30, 71, 30, 42, 30, 30, 30]
+/home/zheda/data/flower_all/102flowers/data/image_03589.jpg
+71 [30, 30, 30, 42, 30, 30, 30, 30, 42, 30, 30, 30, 30]
+/home/zheda/data/flower_all/102flowers/data/image_03598.jpg
+71 [74, 74, 74, 74, 71, 71, 71, 95, 74, 74]
+/home/zheda/data/flower_all/102flowers/data/image_03604.jpg
+71 [43, 43, 43, 17, 30, 30, 30, 43, 43, 43, 17, 30, 30, 43, 71]
+/home/zheda/data/flower_all/102flowers/data/image_03608.jpg
+71 [82, 82, 57, 43, 71, 71, 57, 57, 10]
+/home/zheda/data/flower_all/102flowers/data/image_03610.jpg
+71 [17, 57, 42, 42, 57, 42, 42, 57, 57, 42, 57, 42, 17, 57, 73, 57, 57, 10, 73, 42, 57]
+/home/zheda/data/flower_all/102flowers/data/image_03620.jpg
+71 [31, 31, 31, 31, 31, 35, 94, 3, 93, 31, 31, 94, 94]
+/home/zheda/data/flower_all/102flowers/data/image_03625.jpg
+71 [17, 30, 17, 17, 17, 90, 17, 17, 17, 90, 17, 17, 79, 17, 17, 30, 101, 30, 101, 79, 90]
+/home/zheda/data/flower_all/102flowers/data/image_03629.jpg
+71 [31, 31, 83, 31, 92, 39, 83, 83, 92, 31, 83, 38, 97, 71, 83, 71, 83, 92, 31, 95, 71, 81, 81, 83]
+/home/zheda/data/flower_all/102flowers/data/image_03634.jpg
+71 [97, 97, 97, 97, 97, 52, 97, 97, 52, 92, 66, 35, 97, 52, 92, 92, 92]
+/home/zheda/data/flower_all/102flowers/data/image_03635.jpg
+71 [30, 30, 30, 30, 30, 30, 30, 71, 30, 90, 30, 57, 30, 95, 30, 30, 30, 30, 30, 30]
+/home/zheda/data/flower_all/102flowers/data/image_00275.jpg
+72 [99, 99, 99, 99, 17, 0, 17, 38, 61, 99, 0, 17, 0, 17, 17, 99]
+/home/zheda/data/flower_all/102flowers/data/image_00276.jpg
+72 [99, 17, 17, 99, 99, 82, 89, 99, 99, 82, 89, 89, 82, 17, 72, 17, 17, 71]
+/home/zheda/data/flower_all/102flowers/data/image_00283.jpg
+72 [52, 32, 32, 32, 32, 32, 33, 32, 32, 33, 72, 72]
+/home/zheda/data/flower_all/102flowers/data/image_00301.jpg
+72 [72, 98, 98, 23, 23, 23, 98, 98, 23, 98, 72, 83]
+/home/zheda/data/flower_all/102flowers/data/image_00323.jpg
+72 [95, 95, 95, 95, 95, 95, 95, 95, 95, 44, 95, 1, 95, 95, 95, 95]
+/home/zheda/data/flower_all/102flowers/data/image_00332.jpg
+72 [95, 95, 95, 6, 6, 80, 95, 95, 95, 35, 95, 35]
+/home/zheda/data/flower_all/102flowers/data/image_00349.jpg
+72 [72, 72, 93, 72, 95, 17, 17, 83, 17, 17, 72, 17, 17, 17]
+/home/zheda/data/flower_all/102flowers/data/image_00363.jpg
+72 [72, 72, 66, 72, 72, 48, 83, 66, 72, 66, 48, 72, 66, 66, 48, 66, 66, 48, 66, 66, 66, 48]
+/home/zheda/data/flower_all/102flowers/data/image_00369.jpg
+72 [72, 95, 38, 95, 72, 95, 38, 95, 95, 95, 38, 95, 95, 38, 95, 38, 95, 38, 72, 95, 38, 95, 38, 95, 38, 95, 38]
+/home/zheda/data/flower_all/102flowers/data/image_00370.jpg
+72 [86, 12, 12, 72, 86, 86]
+/home/zheda/data/flower_all/102flowers/data/image_00413.jpg
+72 [77, 77, 72, 72, 77, 77, 77, 77, 77, 72, 72]
+/home/zheda/data/flower_all/102flowers/data/image_00428.jpg
+72 [77, 95, 95, 95, 35, 95, 95, 95, 35, 95, 72, 35, 95, 95, 95, 95, 95, 95]
+/home/zheda/data/flower_all/102flowers/data/image_00440.jpg
+72 [72, 95, 95, 72, 95, 95, 95, 72, 95, 95, 95, 95, 95, 95, 95]
+/home/zheda/data/flower_all/102flowers/data/image_01157.jpg
+73 [80, 80, 80, 80, 80, 80, 80, 80, 80, 72, 73, 80, 72, 80, 80, 80, 80, 80, 80, 80]
+/home/zheda/data/flower_all/102flowers/data/image_01163.jpg
+73 [73, 23, 40, 87, 87, 23, 87, 36, 73, 38]
+/home/zheda/data/flower_all/102flowers/data/image_01169.jpg
+73 [15, 15, 45, 15, 10, 15, 15, 73, 10, 10, 42, 10]
+/home/zheda/data/flower_all/102flowers/data/image_01173.jpg
+73 [95, 71, 73, 73, 95, 3, 95, 95, 73, 73, 71, 73, 71, 73, 95, 95, 73, 95, 95, 71, 95, 95, 95, 71, 95, 94]
+/home/zheda/data/flower_all/102flowers/data/image_01178.jpg
+73 [15, 73, 73, 80, 15]
+/home/zheda/data/flower_all/102flowers/data/image_01179.jpg
+73 [94, 94, 73, 95, 73, 94, 95, 95, 95, 95]
+/home/zheda/data/flower_all/102flowers/data/image_01193.jpg
+73 [55, 55, 73, 73, 55, 95, 95, 95, 73, 87, 95, 95, 23, 95, 23, 73, 57, 95, 95, 95]
+/home/zheda/data/flower_all/102flowers/data/image_01198.jpg
+73 [71, 71, 71, 87, 73, 73, 87, 71, 87, 84, 87, 84, 87, 87]
+/home/zheda/data/flower_all/102flowers/data/image_01208.jpg
+73 [89, 89, 89, 89, 89, 42, 73, 73, 73, 73]
+/home/zheda/data/flower_all/102flowers/data/image_01209.jpg
+73 [71, 71, 71, 30, 30, 71, 71, 71, 30, 30, 73, 3, 38, 71, 73, 71, 30, 73]
+/home/zheda/data/flower_all/102flowers/data/image_01215.jpg
+73 [80, 80, 80, 80, 80, 73, 80, 80, 80, 73, 80, 80, 80, 80, 80]
+/home/zheda/data/flower_all/102flowers/data/image_01217.jpg
+73 [73, 73, 42, 73, 86, 42, 42, 72, 42, 30, 42, 38, 38, 42, 42, 73]
+/home/zheda/data/flower_all/102flowers/data/image_01220.jpg
+73 [15, 15, 15, 15, 73, 15, 4, 15, 15, 73, 73, 73, 15, 73, 15, 15, 64]
+/home/zheda/data/flower_all/102flowers/data/image_01223.jpg
+73 [30, 84, 84, 23, 84, 84, 84, 87, 84, 84, 84, 87, 87]
+/home/zheda/data/flower_all/102flowers/data/image_01224.jpg
+73 [89, 89, 89, 89, 89, 89, 73, 89, 73, 89, 73, 73, 73, 89, 89]
+/home/zheda/data/flower_all/102flowers/data/image_01228.jpg
+73 [87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87, 87]
+/home/zheda/data/flower_all/102flowers/data/image_01230.jpg
+73 [71, 71, 87, 71, 71, 73, 87, 71, 87, 87, 73, 84, 84, 84, 71]
+/home/zheda/data/flower_all/102flowers/data/image_01233.jpg
+73 [89, 89, 89, 89, 89, 89, 89]
+/home/zheda/data/flower_all/102flowers/data/image_01237.jpg
+73 [89, 89, 10, 89, 89, 89, 89, 89, 89, 80, 89]
+/home/zheda/data/flower_all/102flowers/data/image_01242.jpg
+73 [15, 73, 73, 89, 89, 89]
+/home/zheda/data/flower_all/102flowers/data/image_01245.jpg
+73 [15, 15, 15, 15]
+/home/zheda/data/flower_all/102flowers/data/image_01256.jpg
+73 [42, 42, 42, 42, 98, 42, 42, 42, 98, 73, 73, 42, 100, 42, 42, 100, 42, 73, 73]
+/home/zheda/data/flower_all/102flowers/data/image_01259.jpg
+73 [95, 95, 95, 95, 87, 95, 95, 95, 95, 87, 95, 87]
+/home/zheda/data/flower_all/102flowers/data/image_01268.jpg
+73 [57, 57, 73, 57, 57, 55, 57, 57, 57, 57, 95, 87, 87, 57, 95, 87, 95, 95]
+/home/zheda/data/flower_all/102flowers/data/image_01274.jpg
+73 [89, 89, 89, 89, 89, 89, 89, 89, 89]
+/home/zheda/data/flower_all/102flowers/data/image_01280.jpg
+73 [89, 100, 10, 89, 89, 10, 100, 89, 89, 10, 89, 89, 89, 89]
+/home/zheda/data/flower_all/102flowers/data/image_01282.jpg
+73 [71, 71, 71, 84, 3, 71, 71, 71, 84, 38, 3, 71, 38, 3, 38, 3, 38, 84, 84, 38, 84]
+/home/zheda/data/flower_all/102flowers/data/image_01296.jpg
+73 [15, 73, 73, 15, 15, 15, 15, 73, 15, 15, 15, 15, 15, 15, 15, 73, 15, 15]
+/home/zheda/data/flower_all/102flowers/data/image_01305.jpg
+73 [38, 38, 38, 30, 38, 30, 38, 74]
+/home/zheda/data/flower_all/102flowers/data/image_01310.jpg
+73 [87, 87, 87, 73, 87, 87, 73, 73, 87, 87, 87]
+/home/zheda/data/flower_all/102flowers/data/image_01313.jpg
+73 [86, 86, 6, 86, 86, 80, 80, 86]
+/home/zheda/data/flower_all/102flowers/data/image_02073.jpg
+74 [75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75, 75]
+/home/zheda/data/flower_all/102flowers/data/image_02100.jpg
+74 [6, 6]
+/home/zheda/data/flower_all/102flowers/data/image_02104.jpg
+74 [74, 74, 19, 19, 19, 19]
+/home/zheda/data/flower_all/102flowers/data/image_02113.jpg
+74 [74, 94, 94, 94, 94, 94, 74, 94, 94, 94, 94, 94, 74]
+/home/zheda/data/flower_all/102flowers/data/image_02114.jpg
+74 [19, 19, 19, 19]
+/home/zheda/data/flower_all/102flowers/data/image_02121.jpg
+74 [74, 74, 74, 74, 74, 50, 74, 50, 50, 74, 50, 74, 50, 50, 50, 50, 50]
+/home/zheda/data/flower_all/102flowers/data/image_02137.jpg
+74 [19, 19, 19, 19, 19, 19, 19]
+/home/zheda/data/flower_all/102flowers/data/image_02142.jpg
+74 [50, 74, 74, 50, 43]
+/home/zheda/data/flower_all/102flowers/data/image_02150.jpg
+74 [6, 74, 74, 41, 74, 6, 6]
+/home/zheda/data/flower_all/102flowers/data/image_02162.jpg
+74 [19]
+/home/zheda/data/flower_all/102flowers/data/image_02447.jpg
+75 [97, 35, 35, 35, 35, 35, 35, 8, 81, 75, 8, 75, 35]
+/home/zheda/data/flower_all/102flowers/data/image_02451.jpg
+75 [84, 84, 84, 84, 84, 100, 84, 100, 84, 84, 100, 84]
+/home/zheda/data/flower_all/102flowers/data/image_02452.jpg
+75 [75, 17, 17, 0, 0, 38, 0, 0, 75, 42, 75, 33, 17, 42, 42, 85]
+/home/zheda/data/flower_all/102flowers/data/image_02453.jpg
+75 [8, 8, 8, 8, 8, 8, 8, 8, 8, 97]
+/home/zheda/data/flower_all/102flowers/data/image_02455.jpg
+75 [97, 97, 97, 97, 35, 97, 8, 97]
+/home/zheda/data/flower_all/102flowers/data/image_02457.jpg
+75 [66, 66, 66, 75, 66, 75, 75, 75]
+/home/zheda/data/flower_all/102flowers/data/image_02459.jpg
+75 [3, 3, 35, 38, 3]
+/home/zheda/data/flower_all/102flowers/data/image_02469.jpg
+75 [3, 3, 3, 83, 83, 83, 83, 75, 75, 77]
+/home/zheda/data/flower_all/102flowers/data/image_02470.jpg
+75 [27, 27, 27, 27, 27, 75, 27, 75, 75, 27, 27, 27, 27, 75]
+/home/zheda/data/flower_all/102flowers/data/image_02472.jpg
+75 [27, 18, 27]
+/home/zheda/data/flower_all/102flowers/data/image_02476.jpg
+75 [27, 27, 27, 75, 75, 27, 75]
+/home/zheda/data/flower_all/102flowers/data/image_02478.jpg
+75 [75, 18, 18, 54, 54, 75, 97, 97, 54, 18, 18, 18, 54, 54, 18, 18]
+/home/zheda/data/flower_all/102flowers/data/image_02484.jpg
+75 [75, 93, 35, 18, 35, 35, 93, 18, 18, 93, 51, 93, 93]
+/home/zheda/data/flower_all/102flowers/data/image_02488.jpg
+75 [83, 83, 75, 83, 75, 75]
+/home/zheda/data/flower_all/102flowers/data/image_02498.jpg
+75 [54, 54, 54, 54, 54, 44, 54, 54, 54, 54, 54, 54]
+/home/zheda/data/flower_all/102flowers/data/image_02503.jpg
+75 [44, 44, 44, 20, 20, 18, 44, 20, 44, 18, 20, 44, 44, 75, 44, 20, 44]
+/home/zheda/data/flower_all/102flowers/data/image_02510.jpg
+75 [0, 0, 0, 0, 0, 0, 0, 0, 71, 0, 0, 0, 0, 0, 0, 90, 39, 0, 0, 0, 0]
+/home/zheda/data/flower_all/102flowers/data/image_02516.jpg
+75 [27, 27, 27, 27, 66, 66, 66, 27, 66, 66, 66, 66, 27, 75, 75, 75, 75, 27, 27]
+/home/zheda/data/flower_all/102flowers/data/image_02527.jpg
+75 [18, 18, 75, 75, 18, 75, 18, 18, 75, 75, 18, 18, 75, 18, 75, 75]
+/home/zheda/data/flower_all/102flowers/data/image_02536.jpg
+75 [51, 51, 51, 92, 76, 75, 75, 92, 92, 18, 66]
+/home/zheda/data/flower_all/102flowers/data/image_02538.jpg
+75 [66, 66, 66, 74, 66, 86, 66, 31, 66]
+/home/zheda/data/flower_all/102flowers/data/image_02548.jpg
+75 [82, 71, 71, 71, 97, 71, 71, 71, 71, 71, 71, 71, 71, 81]
+/home/zheda/data/flower_all/102flowers/data/image_02549.jpg
+75 [75, 18, 18, 18, 18, 18, 18]
+/home/zheda/data/flower_all/102flowers/data/image_00018.jpg
+76 [99, 99, 99, 99, 90, 99, 12, 99, 12, 90, 12, 90, 39, 12, 90]
+/home/zheda/data/flower_all/102flowers/data/image_00033.jpg
+76 [21, 34, 21, 21, 21, 21, 34, 76, 21, 21, 34, 34, 34, 76]
+/home/zheda/data/flower_all/102flowers/data/image_00039.jpg
+76 [91, 90, 91, 91, 91, 90, 12, 12, 12, 12, 12]
+/home/zheda/data/flower_all/102flowers/data/image_00045.jpg
+76 [34]
+/home/zheda/data/flower_all/102flowers/data/image_00063.jpg
+76 [34, 34, 34, 76, 34, 34, 34, 34, 34]
+/home/zheda/data/flower_all/102flowers/data/image_00069.jpg
+76 [34]
+/home/zheda/data/flower_all/102flowers/data/image_00074.jpg
+76 [93, 76, 93, 93, 93, 81, 76, 76, 76, 76, 81, 81, 93, 91]
+/home/zheda/data/flower_all/102flowers/data/image_00089.jpg
+76 [37, 37, 12, 37, 12, 0, 12, 0]
+/home/zheda/data/flower_all/102flowers/data/image_00103.jpg
+76 [32, 32, 32, 32, 32, 76, 76, 32, 32, 32, 76, 32, 32]
+/home/zheda/data/flower_all/102flowers/data/image_00113.jpg
+76 [37, 37, 37, 37, 37, 37, 37, 37]
+/home/zheda/data/flower_all/102flowers/data/image_00114.jpg
+76 [56, 81, 81, 91, 91, 81, 81, 76, 81]
+/home/zheda/data/flower_all/102flowers/data/image_00117.jpg
+76 [32]
+/home/zheda/data/flower_all/102flowers/data/image_00121.jpg
+76 [66, 66, 76, 66, 99, 99, 99, 76, 66, 99, 99, 99, 1, 99, 1, 99, 99, 99, 99, 76, 28, 99, 70, 28]
+/home/zheda/data/flower_all/102flowers/data/image_00134.jpg
+76 [37, 37, 37, 37, 37, 37, 76, 37, 37, 37, 76, 37, 37]
+/home/zheda/data/flower_all/102flowers/data/image_00159.jpg
+76 [91, 91, 91, 76, 91, 76, 91, 76, 91, 22, 91, 91, 22, 76, 76, 22, 76, 76]
+/home/zheda/data/flower_all/102flowers/data/image_00173.jpg
+76 [76, 76, 28, 28, 21, 28, 76, 76, 28, 3, 28, 28]
+/home/zheda/data/flower_all/102flowers/data/image_00183.jpg
+76 [5]
+/home/zheda/data/flower_all/102flowers/data/image_00185.jpg
+76 [76, 76, 76, 28, 76, 21, 28, 28, 76, 21, 21, 28, 28, 28, 28, 21, 76]
+/home/zheda/data/flower_all/102flowers/data/image_00186.jpg
+76 [33, 48, 76, 48, 76, 85, 37, 17, 76, 48, 48, 48, 76]
+/home/zheda/data/flower_all/102flowers/data/image_00198.jpg
+76 [34]
+/home/zheda/data/flower_all/102flowers/data/image_00213.jpg
+76 [76, 76, 28, 28, 28, 76, 28, 28, 28, 28, 76, 28, 28, 28, 28, 28, 28]
+/home/zheda/data/flower_all/102flowers/data/image_00217.jpg
+76 [21, 21, 21]
+/home/zheda/data/flower_all/102flowers/data/image_00226.jpg
+76 [78, 78, 78, 37, 37, 37, 78, 78, 78, 78]
+/home/zheda/data/flower_all/102flowers/data/image_00237.jpg
+76 [91, 91, 91, 91, 91, 91, 22]
+/home/zheda/data/flower_all/102flowers/data/image_00244.jpg
+76 [37, 37, 76, 76, 37]
+/home/zheda/data/flower_all/102flowers/data/image_01829.jpg
+77 [95, 95, 95, 77, 95, 95, 73, 77, 95, 95, 95, 95, 73, 77, 1]
+/home/zheda/data/flower_all/102flowers/data/image_01838.jpg
+77 [83, 83, 80, 83, 80, 80, 77, 83, 83, 83, 83]
+/home/zheda/data/flower_all/102flowers/data/image_01873.jpg
+77 [83, 83, 72, 77, 72, 72, 77, 72, 72, 83, 77, 72, 72, 72, 80]
+/home/zheda/data/flower_all/102flowers/data/image_01894.jpg
+77 [83, 83, 83, 95, 95, 95, 95, 95, 83, 95, 95, 95]
+/home/zheda/data/flower_all/102flowers/data/image_01897.jpg
+77 [83, 31, 77, 77, 83, 6, 6, 77, 83, 31, 31, 77, 31, 31, 77, 83]
+/home/zheda/data/flower_all/102flowers/data/image_01911.jpg
+77 [83, 95, 95, 95, 77, 95, 95, 95, 95, 77, 95, 95, 95, 83, 77]
+/home/zheda/data/flower_all/102flowers/data/image_01919.jpg
+77 [83, 83, 83, 83, 80, 80, 80, 77, 83, 77]
+/home/zheda/data/flower_all/102flowers/data/image_01936.jpg
+77 [80, 80, 80, 80, 80, 80, 77, 80, 77, 80, 80, 80]
+/home/zheda/data/flower_all/102flowers/data/image_01939.jpg
+77 [83, 83, 83, 77, 83, 83, 83, 77, 72, 77, 72, 72, 72, 77, 83, 72, 72, 72, 77]
+/home/zheda/data/flower_all/102flowers/data/image_01952.jpg
+77 [38, 38, 38, 38, 38, 38, 38]
+/home/zheda/data/flower_all/102flowers/data/image_01960.jpg
+77 [95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95, 95]
+/home/zheda/data/flower_all/102flowers/data/image_01976.jpg
+79 [96, 96, 30, 30, 79, 96, 30, 96, 30, 30, 79, 30, 30]
+/home/zheda/data/flower_all/102flowers/data/image_01977.jpg
+79 [96, 96, 96, 96, 96, 96, 96, 79, 79, 96]
+/home/zheda/data/flower_all/102flowers/data/image_01986.jpg
+79 [73, 73, 73, 73, 73, 73, 23]
+/home/zheda/data/flower_all/102flowers/data/image_01989.jpg
+79 [43, 43, 90, 43, 90, 90, 43, 43, 90, 90, 43, 43, 100, 90, 43, 90, 90, 90, 90, 90]
+/home/zheda/data/flower_all/102flowers/data/image_01994.jpg
+79 [84, 84, 84, 98, 98, 43, 43, 42, 84, 84, 98, 42, 43, 43]
+/home/zheda/data/flower_all/102flowers/data/image_01995.jpg
+79 [101, 101, 101, 90, 101, 101, 90, 79, 90, 101, 101, 101]
+/home/zheda/data/flower_all/102flowers/data/image_02002.jpg
+79 [90, 101, 90, 101, 101, 101, 90, 90, 101, 90, 90, 79, 79, 79, 79]
+/home/zheda/data/flower_all/102flowers/data/image_02005.jpg
+79 [87, 87]
+/home/zheda/data/flower_all/102flowers/data/image_02010.jpg
+79 [90, 79, 90, 79, 43, 79, 79, 43, 43, 79, 30, 90, 90, 90, 30, 90, 43, 90]
+/home/zheda/data/flower_all/102flowers/data/image_02016.jpg
+79 [20, 20, 20, 20, 20, 20, 79, 79, 79, 20, 79, 79]
+/home/zheda/data/flower_all/102flowers/data/image_02017.jpg
+79 [80, 80, 80, 80, 90, 80, 80, 80, 80, 90, 80, 90]
+/home/zheda/data/flower_all/102flowers/data/image_02022.jpg
+79 [83]
+/home/zheda/data/flower_all/102flowers/data/image_02029.jpg
+79 [30, 88, 101, 79, 30, 30, 101, 79, 88, 101, 30, 30, 73, 88, 79, 30, 23, 30, 30]
+/home/zheda/data/flower_all/102flowers/data/image_02043.jpg
+79 [89, 89, 89, 89, 79]
+/home/zheda/data/flower_all/102flowers/data/image_02048.jpg
+79 [43, 43, 43, 79, 79, 79, 43, 79, 43, 43, 79, 79, 43, 43]
+/home/zheda/data/flower_all/102flowers/data/image_02050.jpg
+79 [77, 77, 77, 77, 77]
+/home/zheda/data/flower_all/102flowers/data/image_02053.jpg
+79 [96, 96, 96, 96, 79, 96, 96, 79, 96, 30, 30, 96, 30, 30, 30]
+/home/zheda/data/flower_all/102flowers/data/image_02054.jpg
+79 [90, 90, 90, 90, 79, 90, 90]
+/home/zheda/data/flower_all/102flowers/data/image_02063.jpg
+79 [17, 17, 79, 89, 79, 79, 100, 17, 100, 17]
+/home/zheda/data/flower_all/102flowers/data/image_02067.jpg
+79 [43, 43, 55, 82, 82, 98, 98]
+/home/zheda/data/flower_all/102flowers/data/image_02068.jpg
+79 [39, 39, 39, 39, 39, 39, 79]
+/home/zheda/data/flower_all/102flowers/data/image_01590.jpg
+81 [68, 37, 81, 81, 50, 37, 37, 81, 81, 81, 37, 37, 37, 37, 81, 81]
+/home/zheda/data/flower_all/102flowers/data/image_01591.jpg
+81 [66, 27, 66, 18, 8, 66, 18, 18, 66, 18, 18]
+/home/zheda/data/flower_all/102flowers/data/image_01592.jpg
+81 [76, 76, 44, 44, 44, 81, 39, 44, 44, 44, 76]
+/home/zheda/data/flower_all/102flowers/data/image_01593.jpg
+81 [24, 27, 27, 27, 27, 18, 50, 27, 27, 27, 27, 50, 50, 18, 27, 50, 50, 44, 27, 18, 44]
+/home/zheda/data/flower_all/102flowers/data/image_01600.jpg
+81 [71, 71, 71, 84, 38, 71, 84, 71, 81, 71, 71, 31, 87, 84, 87, 81, 81, 81, 81, 71, 81, 71, 84]
+/home/zheda/data/flower_all/102flowers/data/image_01601.jpg
+81 [71, 71, 71, 71, 71, 71, 81, 81, 71, 71, 81, 71, 71, 39, 39, 81, 39, 71, 39]
+/home/zheda/data/flower_all/102flowers/data/image_01603.jpg
+81 [68, 68, 68, 68, 68, 68, 68, 50, 50]
+/home/zheda/data/flower_all/102flowers/data/image_01605.jpg
+81 [18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18]
+/home/zheda/data/flower_all/102flowers/data/image_01612.jpg
+81 [75, 52, 52, 18, 52, 18, 52, 44, 18, 75, 67, 75, 18, 52, 52, 67, 67, 18, 75]
+/home/zheda/data/flower_all/102flowers/data/image_01614.jpg
+81 [83, 83, 81, 83, 83, 18, 44, 83, 81, 83, 83, 27, 27]
+/home/zheda/data/flower_all/102flowers/data/image_01615.jpg
+81 [18, 18, 44, 44, 44, 44, 18, 44, 76, 18, 18, 18, 18, 18, 18, 44, 18, 44, 44, 18, 44, 44]
+/home/zheda/data/flower_all/102flowers/data/image_01617.jpg
+81 [32, 32, 32, 27, 32, 32, 27]
+/home/zheda/data/flower_all/102flowers/data/image_01628.jpg
+81 [18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 8, 18, 8]
+/home/zheda/data/flower_all/102flowers/data/image_01629.jpg
+81 [50, 50, 50, 50, 0, 0, 50, 50, 0]
+/home/zheda/data/flower_all/102flowers/data/image_01635.jpg
+81 [61, 61, 50, 50, 68, 68, 50, 68, 50, 68, 50, 50, 68, 68]
+/home/zheda/data/flower_all/102flowers/data/image_01643.jpg
+81 [81, 39, 81, 39, 39, 0, 0, 39, 39, 39, 39, 39]
+/home/zheda/data/flower_all/102flowers/data/image_01645.jpg
+81 [50, 50, 39, 39, 50, 81, 50, 81, 39, 81, 94, 50, 39, 50, 97, 81, 39, 81, 50, 50, 81, 39, 97, 81, 50]
+/home/zheda/data/flower_all/102flowers/data/image_01648.jpg
+81 [18, 18, 97, 81, 44, 50, 18, 18, 81, 18, 54, 54, 18, 18, 18, 43]
+/home/zheda/data/flower_all/102flowers/data/image_01649.jpg
+81 [18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18]
+/home/zheda/data/flower_all/102flowers/data/image_01651.jpg
+81 [71, 71, 71, 37, 37, 37, 71, 37, 37, 37, 71]
+/home/zheda/data/flower_all/102flowers/data/image_01652.jpg
+81 [81, 81, 18, 81, 81, 18, 18, 44, 18, 18, 44, 18, 18, 18, 31, 35, 18, 18, 18, 18, 18]
+/home/zheda/data/flower_all/102flowers/data/image_01658.jpg
+81 [50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50]
+/home/zheda/data/flower_all/102flowers/data/image_01659.jpg
+81 [44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44]
+/home/zheda/data/flower_all/102flowers/data/image_01661.jpg
+81 [50, 50, 83, 18, 50, 83, 18, 32, 83, 18]
+/home/zheda/data/flower_all/102flowers/data/image_01663.jpg
+81 [93, 93, 93, 93, 81, 39, 93, 93, 93, 93, 81, 93, 81, 81, 81, 81, 39, 81, 39]
+/home/zheda/data/flower_all/102flowers/data/image_01664.jpg
+81 [50, 50, 50, 50, 50, 97, 50, 50, 81, 97, 50, 50, 50, 50]
+/home/zheda/data/flower_all/102flowers/data/image_01669.jpg
+81 [33, 32, 33, 18, 33, 81, 33, 18, 33, 81, 18, 81, 81, 33]
+/home/zheda/data/flower_all/102flowers/data/image_01681.jpg
+81 [8, 8, 18, 18, 18, 8, 18, 18, 18, 18, 18, 18, 18, 81, 81]
+/home/zheda/data/flower_all/102flowers/data/image_01687.jpg
+81 [29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29, 29]
+/home/zheda/data/flower_all/102flowers/data/image_01689.jpg
+81 [32, 81, 32, 32, 81, 18, 18, 32, 18, 18, 32, 32, 18, 18, 18, 32]
+/home/zheda/data/flower_all/102flowers/data/image_01698.jpg
+82 [100, 100, 100, 100, 100, 89, 100, 89, 89, 100, 100, 89, 100, 89, 89, 89]
+/home/zheda/data/flower_all/102flowers/data/image_01699.jpg
+82 [89, 101, 89, 89, 89, 89, 82, 89, 89, 89, 89, 25, 17, 42, 17, 17, 17]
+/home/zheda/data/flower_all/102flowers/data/image_01700.jpg
+82 [64, 88, 88, 88, 88]
+/home/zheda/data/flower_all/102flowers/data/image_01704.jpg
+82 [89, 89, 89, 89, 89, 89, 89, 89, 89, 90, 90]
+/home/zheda/data/flower_all/102flowers/data/image_01707.jpg
+82 [30, 30, 30, 31, 30, 29, 90, 30, 23, 71, 30, 29, 72, 17, 29, 72, 29, 82, 29, 90]
+/home/zheda/data/flower_all/102flowers/data/image_01708.jpg
+82 [88, 88, 88, 88, 88, 88, 88]
+/home/zheda/data/flower_all/102flowers/data/image_01709.jpg
+82 [82, 17, 17, 17, 82, 82, 17, 82, 82, 82, 17, 17, 17, 82, 17, 17]
+/home/zheda/data/flower_all/102flowers/data/image_01710.jpg
+82 [52, 52, 47, 52, 41, 52, 41, 41, 15, 41, 41, 41]
+/home/zheda/data/flower_all/102flowers/data/image_01711.jpg
+82 [64, 64, 64, 64, 64, 64, 64, 64, 64]
+/home/zheda/data/flower_all/102flowers/data/image_01717.jpg
+82 [14, 14, 82, 14, 14, 14, 14, 47, 14, 11, 11, 11, 47, 14]
+/home/zheda/data/flower_all/102flowers/data/image_01718.jpg
+82 [53]
+/home/zheda/data/flower_all/102flowers/data/image_01723.jpg
+82 [86, 33, 17, 17, 55, 33, 86, 33, 17, 83, 86, 17, 17, 17, 17]
+/home/zheda/data/flower_all/102flowers/data/image_01724.jpg
+82 [17, 17, 17, 17, 17, 17, 17, 43, 55, 17, 17, 17, 17, 17, 17, 30, 55, 17]
+/home/zheda/data/flower_all/102flowers/data/image_01726.jpg
+82 [64, 64, 64, 47, 64, 41, 64, 41]
+/home/zheda/data/flower_all/102flowers/data/image_01728.jpg
+82 [97, 97, 0, 0, 82, 0, 82, 97, 97, 0, 0, 0, 82, 0, 82, 0]
+/home/zheda/data/flower_all/102flowers/data/image_01730.jpg
+82 [85, 85, 85, 85, 85, 85, 85, 85, 97, 85, 91, 97, 97, 81, 82]
+/home/zheda/data/flower_all/102flowers/data/image_01731.jpg
+82 [40, 50, 50, 50, 50, 50]
+/home/zheda/data/flower_all/102flowers/data/image_01733.jpg
+82 [52, 52, 88, 64, 15, 52, 88, 88, 88, 88, 15, 88]
+/home/zheda/data/flower_all/102flowers/data/image_01735.jpg
+82 [55, 87, 17, 17, 17, 17, 33, 17, 33, 17, 33]
+/home/zheda/data/flower_all/102flowers/data/image_01736.jpg
+82 [52, 52, 52, 82, 52, 88, 52, 52]
+/home/zheda/data/flower_all/102flowers/data/image_01737.jpg
+82 [58, 82, 100, 17, 100, 100, 89, 100, 100, 98, 100, 100, 82, 100, 100, 100, 100]
+/home/zheda/data/flower_all/102flowers/data/image_01738.jpg
+82 [88, 88, 88, 88, 88, 82, 88, 47, 88, 88, 82, 47, 88]
+/home/zheda/data/flower_all/102flowers/data/image_01739.jpg
+82 [82, 82, 25, 25, 25, 25, 82, 25, 25, 25, 25]
+/home/zheda/data/flower_all/102flowers/data/image_01744.jpg
+82 [75, 75, 75, 75, 97, 75, 75, 50, 75, 75, 75, 75, 50, 75]
+/home/zheda/data/flower_all/102flowers/data/image_01745.jpg
+82 [82, 82, 82, 82, 100, 100, 89, 100, 100, 100, 82, 82, 89, 100, 100]
+/home/zheda/data/flower_all/102flowers/data/image_01748.jpg
+82 [82, 82, 100, 100, 100, 100, 96, 100, 82, 100, 100, 89, 89]
+/home/zheda/data/flower_all/102flowers/data/image_01753.jpg
+82 [52, 89, 89, 89, 89, 89, 89, 89, 47, 89, 89, 89, 89, 89, 89, 89, 89, 46, 46]
+/home/zheda/data/flower_all/102flowers/data/image_01756.jpg
+82 [88, 88, 88]
+/home/zheda/data/flower_all/102flowers/data/image_01757.jpg
+82 [56, 56, 56, 87, 5, 75, 74, 17, 31, 87, 87]
+/home/zheda/data/flower_all/102flowers/data/image_01758.jpg
+82 [51, 88, 88, 88, 88, 88, 88, 88]
+/home/zheda/data/flower_all/102flowers/data/image_01769.jpg
+82 [100, 100, 88, 82, 100, 100, 100, 100, 100, 100, 96, 88, 82, 100, 100, 100, 100, 100, 100, 88, 82, 88]
+/home/zheda/data/flower_all/102flowers/data/image_01774.jpg
+82 [56, 56, 56, 75, 17, 17, 17, 17, 17, 17]
+/home/zheda/data/flower_all/102flowers/data/image_01787.jpg
+82 [88, 88, 88, 88, 45, 88, 88, 88, 88, 88, 88]
+/home/zheda/data/flower_all/102flowers/data/image_01790.jpg
+82 [82, 88, 88, 59, 88, 88, 82, 88, 88, 88, 88, 59, 88]
+/home/zheda/data/flower_all/102flowers/data/image_01791.jpg
+82 [82, 17, 82, 17, 82, 30, 17, 17, 17, 17]
+/home/zheda/data/flower_all/102flowers/data/image_01794.jpg
+82 [58, 96, 96, 5, 58, 58]
+/home/zheda/data/flower_all/102flowers/data/image_01810.jpg
+82 [45, 25, 89, 25, 25, 25, 25, 25, 89, 25, 25, 89, 89, 89]
+/home/zheda/data/flower_all/102flowers/data/image_01817.jpg
+82 [100, 89, 100, 40, 96, 100, 82, 89, 100, 100, 58]
+/home/zheda/data/flower_all/102flowers/data/image_01826.jpg
+82 [100, 100, 100, 100, 100, 82, 100, 100, 100, 100, 100, 100, 100, 100]
+/home/zheda/data/flower_all/102flowers/data/image_02555.jpg
+83 [80, 80, 80, 80, 77, 80, 89, 80, 77, 80, 80, 80, 80, 80, 80, 80, 89, 77]
+/home/zheda/data/flower_all/102flowers/data/image_02559.jpg
+83 [94, 68, 94, 68, 95, 68, 68, 68, 95, 68, 68]
+/home/zheda/data/flower_all/102flowers/data/image_02564.jpg
+83 [41, 41, 41, 41, 41, 41, 41, 41, 41]
+/home/zheda/data/flower_all/102flowers/data/image_02569.jpg
+83 [41, 41, 72, 41, 41, 41, 41, 41, 41]
+/home/zheda/data/flower_all/102flowers/data/image_02572.jpg
+83 [72]
+/home/zheda/data/flower_all/102flowers/data/image_02574.jpg
+83 [68, 68, 68, 68, 68, 80, 72, 83, 72, 72, 72, 39, 72]
+/home/zheda/data/flower_all/102flowers/data/image_02580.jpg
+83 [80, 80, 80, 80, 80, 80, 83, 72, 90, 20, 72, 80, 72]
+/home/zheda/data/flower_all/102flowers/data/image_02589.jpg
+83 [6, 52, 64, 52, 95, 52, 52, 52]
+/home/zheda/data/flower_all/102flowers/data/image_02590.jpg
+83 [91, 36, 91, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 93, 36, 60, 91, 36, 36, 36, 36, 93, 20]
+/home/zheda/data/flower_all/102flowers/data/image_02591.jpg
+83 [83, 83, 83, 17, 17, 17, 83, 39, 39, 39, 39, 39, 39, 83, 83, 39, 39, 95, 77]
+/home/zheda/data/flower_all/102flowers/data/image_02592.jpg
+83 [89, 89, 89, 89, 89, 89, 10, 89, 89, 89, 89, 89, 89, 89, 89, 89]
+/home/zheda/data/flower_all/102flowers/data/image_02594.jpg
+83 [83, 83, 39, 39, 51, 47, 83, 39, 93, 93, 39, 39, 39, 39]
+/home/zheda/data/flower_all/102flowers/data/image_02596.jpg
+83 [83, 17, 17, 83, 17, 39, 17, 17, 17, 17, 39, 17, 17, 17, 39, 80, 17, 17]
+/home/zheda/data/flower_all/102flowers/data/image_02597.jpg
+83 [83, 80, 80, 83, 80, 80, 83, 80, 55, 80, 80]
+/home/zheda/data/flower_all/102flowers/data/image_02599.jpg
+83 [83, 17, 17, 17, 17, 17, 83, 17, 17, 83, 17, 20, 17, 20, 17, 83, 83, 17, 17, 17, 20, 17, 17, 83]
+/home/zheda/data/flower_all/102flowers/data/image_02602.jpg
+83 [36, 36, 39, 36, 36, 36, 36, 36, 36, 83, 56, 39, 36, 36, 36, 39, 36]
+/home/zheda/data/flower_all/102flowers/data/image_02604.jpg
+83 [38, 90, 38, 38, 39, 39, 77, 38, 77, 39, 90, 39, 39, 39]
+/home/zheda/data/flower_all/102flowers/data/image_02606.jpg
+83 [43, 83, 43, 43, 39, 39, 83, 82, 43, 43, 43]
+/home/zheda/data/flower_all/102flowers/data/image_02611.jpg
+83 [47, 47, 64, 15, 64, 64, 64, 41, 15, 64]
+/home/zheda/data/flower_all/102flowers/data/image_02613.jpg
+83 [36, 36, 36, 90, 36, 36, 36, 36, 36, 36, 36, 39, 90, 77, 90, 36, 36, 36, 36]
+/home/zheda/data/flower_all/102flowers/data/image_02615.jpg
+83 [17, 17, 17, 90, 17, 94, 17, 17, 17, 81, 17, 17]
+/home/zheda/data/flower_all/102flowers/data/image_02617.jpg
+83 [41, 41, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39]
+/home/zheda/data/flower_all/102flowers/data/image_02618.jpg
+83 [52, 45, 45, 45, 88, 45, 45, 89, 82, 45, 45, 52, 45, 47, 45, 82, 88, 82, 47, 82, 79]
+/home/zheda/data/flower_all/102flowers/data/image_02619.jpg
+83 [61, 83, 80, 77, 80, 47, 80, 47]
+/home/zheda/data/flower_all/102flowers/data/image_02621.jpg
+83 [80, 80, 80, 80, 80, 51, 80, 80, 47, 47]
+/home/zheda/data/flower_all/102flowers/data/image_02624.jpg
+83 [0, 0, 0, 0, 0, 0, 0, 0, 0, 68, 0, 0, 0, 0]
+/home/zheda/data/flower_all/102flowers/data/image_02626.jpg
+83 [80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 38, 80, 83, 38, 80, 80, 38]
+/home/zheda/data/flower_all/102flowers/data/image_02628.jpg
+83 [101, 101, 101, 89, 58, 101, 17, 101, 89, 72, 89, 72, 72, 89]
+/home/zheda/data/flower_all/102flowers/data/image_02629.jpg
+83 [36, 36, 36, 36, 77, 90, 36, 36, 39, 36, 39]
+/home/zheda/data/flower_all/102flowers/data/image_02631.jpg
+83 [39, 86, 39, 39, 86, 39, 39, 39, 39, 39, 39, 10]
+/home/zheda/data/flower_all/102flowers/data/image_02635.jpg
+83 [41, 90, 41, 80, 42, 52, 51, 59, 59]
+/home/zheda/data/flower_all/102flowers/data/image_04780.jpg
+84 [82, 71, 71, 0, 0, 71, 71, 82, 71, 17, 71, 71, 71]
+/home/zheda/data/flower_all/102flowers/data/image_04786.jpg
+84 [31, 56, 77, 31, 65, 31, 84, 84]
+/home/zheda/data/flower_all/102flowers/data/image_04791.jpg
+84 [67, 67, 2, 67, 67, 61, 67, 67, 61, 61]
+/home/zheda/data/flower_all/102flowers/data/image_02907.jpg
+85 [29, 29, 17, 29, 31, 85, 85, 17, 85, 85, 17, 29, 10, 85, 85, 31, 29, 50, 29, 29]
+/home/zheda/data/flower_all/102flowers/data/image_05518.jpg
+86 [86, 86, 68, 68, 86, 68, 68]
+/home/zheda/data/flower_all/102flowers/data/image_00450.jpg
+87 [87, 35, 35, 35, 87, 38, 35, 87, 3, 87, 3, 35, 38, 77]
+/home/zheda/data/flower_all/102flowers/data/image_00461.jpg
+87 [77, 77, 77, 77, 77, 77, 77, 77, 77, 77, 84, 77, 31, 77, 77]
+/home/zheda/data/flower_all/102flowers/data/image_00465.jpg
+87 [86, 86, 86, 86, 77, 86, 87, 38, 38]
+/home/zheda/data/flower_all/102flowers/data/image_00466.jpg
+87 [38, 87, 38, 38, 38, 3, 35, 38, 35, 35, 35]
+/home/zheda/data/flower_all/102flowers/data/image_00470.jpg
+87 [93, 93, 93, 51, 93, 93, 93, 79, 93, 93, 31, 51, 93, 16, 93, 93, 79, 93, 81, 35, 93, 93, 93, 93, 81, 93, 81, 93, 93]
+/home/zheda/data/flower_all/102flowers/data/image_00480.jpg
+87 [31, 97, 35, 35, 31, 31, 97, 71, 71, 35, 87, 35, 71, 71, 35, 31, 35, 35, 35, 31, 71]
+/home/zheda/data/flower_all/102flowers/data/image_00492.jpg
+87 [86, 86, 87, 86, 87, 87]
+/home/zheda/data/flower_all/102flowers/data/image_00507.jpg
+87 [84, 84, 87, 84, 87, 84, 84, 87, 87]
+/home/zheda/data/flower_all/102flowers/data/image_00508.jpg
+87 [87, 38, 86, 38, 38]
+/home/zheda/data/flower_all/102flowers/data/image_00512.jpg
+87 [77, 87, 77, 77, 77, 77, 77, 77, 43, 77, 77, 75, 77, 77, 77, 77, 77]
+/home/zheda/data/flower_all/102flowers/data/image_00515.jpg
+87 [6]
+/home/zheda/data/flower_all/102flowers/data/image_00519.jpg
+87 [86, 86, 86, 87, 86, 86, 86, 86, 86, 86, 86, 86, 86]
+/home/zheda/data/flower_all/102flowers/data/image_00526.jpg
+87 [86, 86, 86, 86, 86, 87]
+/home/zheda/data/flower_all/102flowers/data/image_00530.jpg
+87 [86, 86, 86]
+/home/zheda/data/flower_all/102flowers/data/image_00545.jpg
+87 [3, 3, 87, 3, 87, 3, 3, 3, 3, 87, 3, 3, 3, 3, 31, 31, 87]
+/home/zheda/data/flower_all/102flowers/data/image_00546.jpg
+87 [86]
+/home/zheda/data/flower_all/102flowers/data/image_00554.jpg
+87 [84, 84, 84, 84, 84, 87, 84]
+/home/zheda/data/flower_all/102flowers/data/image_00567.jpg
+87 [31, 31, 56, 36, 79, 31, 90, 79, 90, 36, 36, 36, 81]
+/home/zheda/data/flower_all/102flowers/data/image_00574.jpg
+87 [38, 38, 54, 54, 38, 38, 38, 38, 75, 38, 54, 38, 54, 38, 38, 38, 35]
+/home/zheda/data/flower_all/102flowers/data/image_00575.jpg
+87 [86, 86, 87, 86, 86, 87, 93, 86, 86, 86]
+/home/zheda/data/flower_all/102flowers/data/image_00577.jpg
+87 [77, 77, 77, 77, 77, 77, 77, 77, 38, 77, 38, 77]
+/home/zheda/data/flower_all/102flowers/data/image_00580.jpg
+87 [87, 77, 77, 87, 77, 77, 87, 77, 77, 77, 87]
+/home/zheda/data/flower_all/102flowers/data/image_00599.jpg
+88 [99, 82, 82, 99, 82, 88, 82, 82, 82, 99, 88, 99, 82, 88, 59, 82, 17]
+/home/zheda/data/flower_all/102flowers/data/image_00601.jpg
+88 [45, 45, 88, 62, 45, 88, 88, 15, 45, 4, 47, 45, 88, 88, 45, 45, 88, 45, 45, 88]
+/home/zheda/data/flower_all/102flowers/data/image_00602.jpg
+88 [25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 25, 88, 25, 82, 25]
+/home/zheda/data/flower_all/102flowers/data/image_00603.jpg
+88 [59, 96, 59, 50, 96, 59, 89, 96, 59, 96, 19]
+/home/zheda/data/flower_all/102flowers/data/image_00611.jpg
+88 [82, 82, 82, 82, 82, 82, 88, 88, 88, 88, 88, 88]
+/home/zheda/data/flower_all/102flowers/data/image_00613.jpg
+88 [82, 82, 82, 88, 88, 82, 88, 88]
+/home/zheda/data/flower_all/102flowers/data/image_00617.jpg
+88 [82, 88, 82, 88, 82, 88, 88, 82, 88, 82, 82, 82, 82, 96, 88, 82]
+/home/zheda/data/flower_all/102flowers/data/image_00635.jpg
+88 [88, 88, 14, 89, 89, 89, 45, 89, 41, 89, 15, 89, 41, 89, 14, 45, 15]
+/home/zheda/data/flower_all/102flowers/data/image_00643.jpg
+88 [45, 88, 89, 19, 89, 45, 89, 89, 89, 89, 89, 88, 89, 88, 89, 89, 89]
+/home/zheda/data/flower_all/102flowers/data/image_00650.jpg
+88 [59, 59, 59, 59, 50, 59, 50, 59, 59, 90, 59, 73, 96, 59, 59, 68, 59]
+/home/zheda/data/flower_all/102flowers/data/image_00653.jpg
+88 [59, 59, 59, 59, 59, 59, 59, 59]
+/home/zheda/data/flower_all/102flowers/data/image_00670.jpg
+88 [82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82]
+/home/zheda/data/flower_all/102flowers/data/image_00676.jpg
+88 [82, 82, 82, 82, 82, 96, 82, 82, 82, 82, 82, 82]
+/home/zheda/data/flower_all/102flowers/data/image_00694.jpg
+88 [59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 40, 42, 59, 59, 50]
+/home/zheda/data/flower_all/102flowers/data/image_00697.jpg
+88 [64, 64, 88, 64, 64, 64, 88, 64, 64, 88, 64, 64, 88, 88, 88, 64]
+/home/zheda/data/flower_all/102flowers/data/image_00705.jpg
+88 [47, 47, 47, 47, 47, 47, 15, 47, 15, 15, 15, 88, 47, 47, 47, 47, 47, 47]
+/home/zheda/data/flower_all/102flowers/data/image_00709.jpg
+88 [59, 59, 59, 59, 96, 59, 59, 59, 59, 59]
+/home/zheda/data/flower_all/102flowers/data/image_00710.jpg
+88 [82, 95, 82, 82, 95, 82, 73, 82, 82, 82, 79, 95, 95, 73, 89, 95]
+/home/zheda/data/flower_all/102flowers/data/image_00721.jpg
+88 [45, 88, 45, 45, 45, 45, 45, 45, 45, 88, 88, 45, 45, 88, 45]
+/home/zheda/data/flower_all/102flowers/data/image_00722.jpg
+88 [59, 59, 59, 59, 59, 80, 59, 80, 80, 17, 42]
+/home/zheda/data/flower_all/102flowers/data/image_00723.jpg
+88 [64, 64, 64, 14, 15, 64, 88, 41, 15, 64]
+/home/zheda/data/flower_all/102flowers/data/image_00724.jpg
+88 [89, 89, 89, 89, 89, 89, 89, 89, 89, 46, 89, 89, 89, 89]
+/home/zheda/data/flower_all/102flowers/data/image_00727.jpg
+88 [25, 25, 25, 25, 25, 25, 25, 25, 25, 88, 25]
+/home/zheda/data/flower_all/102flowers/data/image_00735.jpg
+88 [100, 100, 100, 82, 88, 100, 82, 82, 82, 82, 82, 82, 88, 88, 96, 82, 88]
+/home/zheda/data/flower_all/102flowers/data/image_00738.jpg
+88 [45, 45, 45, 59, 89, 88, 89, 88, 89, 45, 89, 89, 89, 88, 89, 89, 89]
+/home/zheda/data/flower_all/102flowers/data/image_00739.jpg
+88 [58, 58, 88, 58, 98, 58, 58, 88, 88, 58, 98, 88]
+/home/zheda/data/flower_all/102flowers/data/image_00753.jpg
+88 [17, 17, 17, 17, 30, 17, 17, 17, 17, 30, 30, 17, 30, 30, 17]
+/home/zheda/data/flower_all/102flowers/data/image_00757.jpg
+88 [96, 52, 52, 89, 96, 79, 96, 89, 25, 89, 79, 89, 89, 89, 25, 25, 25, 89, 89, 25, 25, 26]
+/home/zheda/data/flower_all/102flowers/data/image_00766.jpg
+88 [17, 17, 17, 17, 17, 30, 17, 17, 17, 17, 17, 17, 42, 17, 17, 30, 17, 42, 72]
+/home/zheda/data/flower_all/102flowers/data/image_00767.jpg
+88 [25, 25, 25, 25, 25, 25, 25, 25]
+/home/zheda/data/flower_all/102flowers/data/image_00768.jpg
+88 [47, 47, 88, 47, 88, 15, 47, 47, 88, 88, 47, 47, 47, 88]
+/home/zheda/data/flower_all/102flowers/data/image_00771.jpg
+88 [47, 14, 47, 47, 14, 47, 15, 15, 15, 15, 15, 41, 15, 15, 15, 41, 15, 15, 15]
+/home/zheda/data/flower_all/102flowers/data/image_04404.jpg
+89 [100, 100, 89, 100, 100, 100, 89, 100, 89, 89, 100, 100]
+/home/zheda/data/flower_all/102flowers/data/image_04407.jpg
+89 [96, 67, 89, 90, 89, 90, 90, 89, 96, 67, 67, 67, 67, 67, 67]
+/home/zheda/data/flower_all/102flowers/data/image_04409.jpg
+89 [88, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88]
+/home/zheda/data/flower_all/102flowers/data/image_04414.jpg
+89 [4, 4, 88, 88]
+/home/zheda/data/flower_all/102flowers/data/image_04416.jpg
+89 [41, 41, 41, 96, 41, 89, 41, 15, 15, 96, 96, 96, 41]
+/home/zheda/data/flower_all/102flowers/data/image_04420.jpg
+89 [45, 45, 45, 89, 45, 45, 45, 70, 70, 89, 89, 89]
+/home/zheda/data/flower_all/102flowers/data/image_04425.jpg
+89 [67, 67, 67, 67, 89, 67, 67, 67, 89, 67, 67, 89, 89, 67, 89]
+/home/zheda/data/flower_all/102flowers/data/image_04430.jpg
+89 [15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 89, 89]
+/home/zheda/data/flower_all/102flowers/data/image_04431.jpg
+89 [45, 100, 98, 100, 45, 60, 45, 98, 98, 60, 98, 42, 42, 42, 98, 100, 100, 98, 60, 42, 42, 100, 100]
+/home/zheda/data/flower_all/102flowers/data/image_04435.jpg
+89 [45, 88, 45, 88, 88, 88, 88, 88, 88, 88, 88, 88, 88]
+/home/zheda/data/flower_all/102flowers/data/image_04437.jpg
+89 [47, 47, 47, 15, 47, 47, 47, 14, 47, 47, 47]
+/home/zheda/data/flower_all/102flowers/data/image_04441.jpg
+89 [41, 41, 15, 41, 89, 41, 89, 41, 52, 41, 14, 41, 89, 89, 89]
+/home/zheda/data/flower_all/102flowers/data/image_04442.jpg
+89 [45, 88, 89, 88, 88, 88, 88, 89, 89, 89, 88, 89]
+/home/zheda/data/flower_all/102flowers/data/image_04446.jpg
+89 [88, 89, 89, 89, 88, 88, 88, 88, 100, 88, 89, 88, 88, 88, 88, 89]
+/home/zheda/data/flower_all/102flowers/data/image_04447.jpg
+89 [89, 88, 88, 89, 40, 89, 40, 88, 73, 88, 88, 73, 88, 89, 88]
+/home/zheda/data/flower_all/102flowers/data/image_04448.jpg
+89 [41, 41, 41, 41, 41, 15, 41, 15, 41, 41, 41, 41, 41, 15, 15, 41, 15, 41, 41]
+/home/zheda/data/flower_all/102flowers/data/image_04455.jpg
+89 [45, 45, 45, 100, 73, 88, 73, 89, 73, 88, 88, 73, 88, 100, 4, 73]
+/home/zheda/data/flower_all/102flowers/data/image_04456.jpg
+89 [84, 84, 84, 84, 84]
+/home/zheda/data/flower_all/102flowers/data/image_04463.jpg
+89 [15, 15, 15, 15, 15, 15, 15, 89, 89, 15, 15, 15, 11, 15, 89, 89, 89, 15, 89, 89, 89, 89, 11]
+/home/zheda/data/flower_all/102flowers/data/image_04470.jpg
+89 [41, 41, 41, 41, 89, 41, 89, 89]
+/home/zheda/data/flower_all/102flowers/data/image_04474.jpg
+89 [45, 45, 89, 88, 88, 89, 88, 88, 73, 73, 73, 88, 88, 88, 88, 73, 73, 88, 88, 88]
+/home/zheda/data/flower_all/102flowers/data/image_04477.jpg
+89 [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100]
+/home/zheda/data/flower_all/102flowers/data/image_04832.jpg
+90 [71, 82, 42, 95, 82, 71, 95, 95, 71, 95, 42, 42, 100, 82, 82, 42, 43, 19, 42]
+/home/zheda/data/flower_all/102flowers/data/image_04837.jpg
+90 [82, 82, 82, 82, 82, 43, 95, 82, 82, 82, 82]
+/home/zheda/data/flower_all/102flowers/data/image_04839.jpg
+90 [42, 42, 42, 42, 38, 42, 38]
+/home/zheda/data/flower_all/102flowers/data/image_04842.jpg
+90 [42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42]
+/home/zheda/data/flower_all/102flowers/data/image_04854.jpg
+90 [42, 42, 42, 42, 96, 90, 79, 90, 42, 90, 42, 42, 90, 90, 90]
+/home/zheda/data/flower_all/102flowers/data/image_04861.jpg
+90 [73, 73, 42, 42, 42, 42, 42, 73]
+/home/zheda/data/flower_all/102flowers/data/image_04864.jpg
+90 [88, 88, 98, 88, 88, 88, 88, 88, 88, 88]
+/home/zheda/data/flower_all/102flowers/data/image_04865.jpg
+90 [42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 42, 100]
+/home/zheda/data/flower_all/102flowers/data/image_04880.jpg
+90 [17, 17, 82, 17, 42, 17, 90, 82, 90]
+/home/zheda/data/flower_all/102flowers/data/image_04894.jpg
+90 [82, 82, 82, 82, 82, 82, 82, 82, 82, 82]
+/home/zheda/data/flower_all/102flowers/data/image_03031.jpg
+91 [78, 78, 78, 91, 78, 78, 8, 78, 3, 8, 8, 3, 3, 3, 21, 8]
+/home/zheda/data/flower_all/102flowers/data/image_03044.jpg
+91 [37, 37, 21, 91, 21, 21, 91, 91, 21]
+/home/zheda/data/flower_all/102flowers/data/image_03068.jpg
+91 [37, 37, 37, 37, 37, 37]
+/home/zheda/data/flower_all/102flowers/data/image_03075.jpg
+91 [94]
+/home/zheda/data/flower_all/102flowers/data/image_03082.jpg
+91 [91, 5, 91, 5, 91, 91, 5, 91, 5, 5, 5]
+/home/zheda/data/flower_all/102flowers/data/image_06012.jpg
+92 [92, 85, 92, 85, 85, 75, 66, 66, 98, 98, 66, 75, 75, 75, 16, 75]
+/home/zheda/data/flower_all/102flowers/data/image_06024.jpg
+92 [92, 92, 16, 92, 16, 16, 16]
+/home/zheda/data/flower_all/102flowers/data/image_06029.jpg
+92 [35, 35, 35, 92, 35, 35, 35, 17, 17, 92, 35, 35, 35, 17, 35, 92, 92, 17, 35]
+/home/zheda/data/flower_all/102flowers/data/image_06031.jpg
+92 [92, 35, 35, 35, 35, 35, 35, 35]
+/home/zheda/data/flower_all/102flowers/data/image_06036.jpg
+92 [92, 40, 40, 40, 85, 40, 16, 40, 40, 40]
+/home/zheda/data/flower_all/102flowers/data/image_06046.jpg
+92 [92, 92, 85, 85, 85, 92, 85, 85, 92, 92, 85]
+/home/zheda/data/flower_all/102flowers/data/image_07303.jpg
+92 [93, 93, 93, 93, 93, 94, 93, 74, 93]
+/home/zheda/data/flower_all/102flowers/data/image_07304.jpg
+93 [94]
+/home/zheda/data/flower_all/102flowers/data/image_07306.jpg
+93 [39, 39, 39, 93, 39, 93, 39, 93, 39, 39, 39, 39, 39, 93]
+/home/zheda/data/flower_all/102flowers/data/image_07319.jpg
+93 [96, 96, 96, 96, 96, 96, 96, 44]
+/home/zheda/data/flower_all/102flowers/data/image_07358.jpg
+93 [94, 94, 38, 81, 94, 81, 94, 38, 81, 93, 38, 94]
+/home/zheda/data/flower_all/102flowers/data/image_07369.jpg
+93 [2, 2, 10, 2, 2]
+/home/zheda/data/flower_all/102flowers/data/image_07390.jpg
+93 [39, 39, 39, 39, 39, 39, 39, 93, 39, 22, 22, 39, 39, 22, 22]
+/home/zheda/data/flower_all/102flowers/data/image_07392.jpg
+93 [31, 65, 93, 31, 76, 65, 17, 76, 76, 65, 31, 31, 93, 1, 17, 65, 77, 93, 1, 79, 79]
+/home/zheda/data/flower_all/102flowers/data/image_07411.jpg
+93 [2]
+/home/zheda/data/flower_all/102flowers/data/image_07412.jpg
+93 [10, 10, 10, 31, 10, 29, 29, 10, 29, 10, 29, 10, 10, 29, 29, 10]
+/home/zheda/data/flower_all/102flowers/data/image_07419.jpg
+93 [54, 2, 2, 2, 2, 54, 83, 2]
+/home/zheda/data/flower_all/102flowers/data/image_07430.jpg
+93 [54, 8, 39, 39, 39, 39, 8, 39, 39]
+/home/zheda/data/flower_all/102flowers/data/image_07447.jpg
+93 [94, 94, 94, 94, 94, 94, 94, 94, 94]
+/home/zheda/data/flower_all/102flowers/data/image_07458.jpg
+93 [28, 28, 28, 95, 93, 71, 10, 10, 93, 93, 71]
+/home/zheda/data/flower_all/102flowers/data/image_07461.jpg
+93 [39, 39, 96]
+/home/zheda/data/flower_all/102flowers/data/image_07463.jpg
+93 [43]
+/home/zheda/data/flower_all/102flowers/data/image_07471.jpg
+94 [77, 77, 83, 77, 87, 83, 83, 77, 87, 83, 83, 83, 83]
+/home/zheda/data/flower_all/102flowers/data/image_07472.jpg
+94 [89, 15, 15, 20, 15, 60, 60, 89, 15, 15, 60]
+/home/zheda/data/flower_all/102flowers/data/image_07477.jpg
+94 [94, 50, 50, 50, 94, 50, 94, 50, 50, 94]
+/home/zheda/data/flower_all/102flowers/data/image_07480.jpg
+94 [94, 95, 79, 94, 94, 79, 79, 79, 79, 79, 43]
+/home/zheda/data/flower_all/102flowers/data/image_07484.jpg
+94 [17, 17, 17, 72, 17, 17, 55, 43, 94, 72, 43, 43, 83, 55, 83, 72]
+/home/zheda/data/flower_all/102flowers/data/image_07485.jpg
+94 [43, 43, 43, 43, 43, 43, 43, 94, 43, 73, 57, 43, 43, 94, 43, 43, 43, 43, 43, 43, 94, 43]
+/home/zheda/data/flower_all/102flowers/data/image_07487.jpg
+94 [71, 71, 71, 94, 71, 71, 71, 94, 94, 71, 71, 73, 94, 71, 73, 94, 71, 94, 71, 71, 94, 71, 94, 94, 71, 94, 10, 94]
+/home/zheda/data/flower_all/102flowers/data/image_07489.jpg
+94 [89, 73, 89, 57, 89, 73, 73, 89, 89, 89, 73, 100, 89, 73, 89, 73, 73, 89, 89]
+/home/zheda/data/flower_all/102flowers/data/image_07490.jpg
+94 [89, 89, 89, 89, 88, 89, 89, 89, 89, 89, 89, 89]
+/home/zheda/data/flower_all/102flowers/data/image_07492.jpg
+94 [57, 57, 57, 57, 95, 57, 57, 73, 57, 57, 73, 95, 95, 100, 95, 57, 73]
+/home/zheda/data/flower_all/102flowers/data/image_07493.jpg
+94 [89, 94, 89, 89, 82, 82, 94, 89, 73, 94, 89, 94, 43]
+/home/zheda/data/flower_all/102flowers/data/image_07500.jpg
+94 [71, 31, 3, 31, 31, 31, 3, 71, 71, 31, 71, 71, 3, 3]
+/home/zheda/data/flower_all/102flowers/data/image_07505.jpg
+94 [45, 88, 88]
+/home/zheda/data/flower_all/102flowers/data/image_07506.jpg
+94 [89, 89, 89, 89, 73, 89, 88, 88, 73, 73, 89, 42, 89]
+/home/zheda/data/flower_all/102flowers/data/image_07507.jpg
+94 [31, 3, 3, 81, 3, 87, 3, 3, 31, 20, 3, 20, 95, 93, 93, 93, 3, 20, 94, 94, 94]
+/home/zheda/data/flower_all/102flowers/data/image_07509.jpg
+94 [100, 100, 42, 42]
+/home/zheda/data/flower_all/102flowers/data/image_07510.jpg
+94 [88, 88, 88, 88, 88, 88, 88, 88, 88]
+/home/zheda/data/flower_all/102flowers/data/image_07515.jpg
+94 [71, 43, 94, 94, 71, 43, 71, 71, 43, 94]
+/home/zheda/data/flower_all/102flowers/data/image_07517.jpg
+94 [94, 94, 54, 54, 54, 54, 94, 54, 50, 94, 54, 54, 18, 94, 94, 54]
+/home/zheda/data/flower_all/102flowers/data/image_07526.jpg
+94 [100, 100, 100, 79, 100, 100, 100, 100, 100, 100, 100, 100]
+/home/zheda/data/flower_all/102flowers/data/image_07529.jpg
+94 [2, 2, 2, 2, 2, 94, 2, 2, 44, 94, 3, 94, 94]
+/home/zheda/data/flower_all/102flowers/data/image_07532.jpg
+94 [14, 89, 14, 89, 89, 89]
+/home/zheda/data/flower_all/102flowers/data/image_07533.jpg
+94 [8, 8, 8, 8, 8, 93, 81, 81, 8, 8]
+/home/zheda/data/flower_all/102flowers/data/image_07535.jpg
+94 [42, 42, 42, 42]
+/home/zheda/data/flower_all/102flowers/data/image_07539.jpg
+94 [42, 42]
+/home/zheda/data/flower_all/102flowers/data/image_07540.jpg
+94 [93, 94, 94, 38, 93, 93, 38, 94, 38]
+/home/zheda/data/flower_all/102flowers/data/image_07547.jpg
+94 [94, 94, 54, 3, 71, 3, 3, 94, 73, 3, 73, 3]
+/home/zheda/data/flower_all/102flowers/data/image_07548.jpg
+94 [2, 94, 21, 2, 2, 44, 94, 94, 94, 54, 2, 94, 2, 2]
+/home/zheda/data/flower_all/102flowers/data/image_07551.jpg
+94 [43, 43, 43, 57, 43, 43, 82, 82, 43, 82, 57, 43, 43, 43, 57, 82, 43, 82, 43]
+/home/zheda/data/flower_all/102flowers/data/image_07553.jpg
+94 [71, 71, 71, 71, 71, 71, 71, 71, 73, 71, 73, 71, 71, 95, 71]
+/home/zheda/data/flower_all/102flowers/data/image_07558.jpg
+94 [10, 10, 10, 10, 89, 10, 10, 3, 89, 98, 10, 100, 3, 100, 100, 89, 98, 98, 98, 73]
+/home/zheda/data/flower_all/102flowers/data/image_07563.jpg
+94 [54, 54, 54, 54, 54, 54, 54, 54, 54, 54, 0, 0, 0]
+/home/zheda/data/flower_all/102flowers/data/image_07575.jpg
+94 [27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27]
+/home/zheda/data/flower_all/102flowers/data/image_07579.jpg
+94 [79, 79, 79, 10, 79, 79, 10, 79, 79, 79, 79]
+/home/zheda/data/flower_all/102flowers/data/image_07583.jpg
+94 [89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89, 89]
+/home/zheda/data/flower_all/102flowers/data/image_07584.jpg
+94 [94, 89, 10, 94, 10, 10, 10]
+/home/zheda/data/flower_all/102flowers/data/image_07590.jpg
+94 [42, 42, 42, 94, 94, 42, 94, 89]
+/home/zheda/data/flower_all/102flowers/data/image_07593.jpg
+94 [95, 95, 95, 95, 95, 55, 95, 95, 95, 95, 95]
+/home/zheda/data/flower_all/102flowers/data/image_07601.jpg
+95 [55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55, 55]
+/home/zheda/data/flower_all/102flowers/data/image_07605.jpg
+95 [95, 95, 73, 73, 95, 25, 73, 73, 73, 82, 89]
+/home/zheda/data/flower_all/102flowers/data/image_07606.jpg
+95 [69, 69, 95, 69, 95]
+/home/zheda/data/flower_all/102flowers/data/image_07607.jpg
+95 [69, 69, 69, 95, 95, 50, 68, 68, 68]
+/home/zheda/data/flower_all/102flowers/data/image_07611.jpg
+95 [10, 10, 10, 73, 45, 10, 10, 95, 84, 95, 84, 95, 82, 95]
+/home/zheda/data/flower_all/102flowers/data/image_07620.jpg
+95 [77, 72, 77, 72, 72, 72, 77, 77, 77, 72]
+/home/zheda/data/flower_all/102flowers/data/image_07631.jpg
+95 [61, 95, 95, 61, 95, 61, 95, 95, 61, 61, 61, 95]
+/home/zheda/data/flower_all/102flowers/data/image_07642.jpg
+95 [55, 55, 55, 55, 55, 55, 95, 55, 55, 55, 55, 55, 55]
+/home/zheda/data/flower_all/102flowers/data/image_07660.jpg
+95 [55, 55, 55, 55, 55, 95, 95, 95, 55, 55, 95, 95]
+/home/zheda/data/flower_all/102flowers/data/image_07673.jpg
+95 [89, 72, 80, 89, 72, 80, 72, 72, 72, 72, 72]
+/home/zheda/data/flower_all/102flowers/data/image_07675.jpg
+95 [96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96]
+/home/zheda/data/flower_all/102flowers/data/image_07676.jpg
+95 [96, 99, 96, 99, 82, 99, 99, 82, 99, 87, 99, 82, 87, 99]
+/home/zheda/data/flower_all/102flowers/data/image_07677.jpg
+95 [17, 17, 0, 79, 79, 0, 96, 0, 96, 96, 0, 0, 90, 17, 96, 79, 0, 17, 0, 79, 0, 0, 79, 96]
+/home/zheda/data/flower_all/102flowers/data/image_07678.jpg
+95 [96, 96, 96, 96, 96, 96, 96, 92, 96, 92, 96, 96, 7, 96, 96, 7, 96, 96, 92]
+/home/zheda/data/flower_all/102flowers/data/image_07679.jpg
+95 [96, 96, 96, 96, 96, 96, 96, 96, 96, 96, 96]
+/home/zheda/data/flower_all/102flowers/data/image_07680.jpg
+95 [95, 68, 95, 68, 68, 68, 95, 68, 68, 69, 69, 69, 69, 69, 69, 69, 69, 68]
+/home/zheda/data/flower_all/102flowers/data/image_07681.jpg
+95 [96, 47, 96, 96, 47, 96, 96, 96, 96, 47, 47, 47]
+/home/zheda/data/flower_all/102flowers/data/image_07682.jpg
+95 [96, 96, 96, 96, 96, 96, 96, 96, 96, 47, 96]
+/home/zheda/data/flower_all/102flowers/data/image_07683.jpg
+95 [96, 96, 96, 89, 96, 89, 89, 79, 96, 96, 96, 96]
+/home/zheda/data/flower_all/102flowers/data/image_07684.jpg
+95 [39]
+/home/zheda/data/flower_all/102flowers/data/image_07685.jpg
+96 [96, 96, 39, 39, 39, 39, 96, 39, 39, 39]
+/home/zheda/data/flower_all/102flowers/data/image_07688.jpg
+96 [79, 79, 99, 79, 101, 79, 99, 61, 61, 79, 79, 39, 39, 39, 39, 96, 90, 101]
+/home/zheda/data/flower_all/102flowers/data/image_07693.jpg
+96 [82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 82, 96, 82, 82, 82, 82, 82, 96]
+/home/zheda/data/flower_all/102flowers/data/image_07696.jpg
+96 [89, 88, 88, 96, 88, 100, 100, 88, 96, 100]
+/home/zheda/data/flower_all/102flowers/data/image_07702.jpg
+96 [79, 79, 79, 79, 79, 79, 79, 79, 79, 73]
+/home/zheda/data/flower_all/102flowers/data/image_07712.jpg
+96 [5, 5, 43, 5, 5, 5, 30, 5, 101, 23, 5, 101, 23, 5]
+/home/zheda/data/flower_all/102flowers/data/image_07720.jpg
+96 [82, 82, 79, 82, 82, 79, 79, 79, 82, 79, 82, 82, 79, 82, 82, 82, 79, 79, 79, 0, 82]
+/home/zheda/data/flower_all/102flowers/data/image_07723.jpg
+96 [88, 88, 96, 96, 88, 88, 88, 96, 88, 96, 88, 100, 82, 100]
+/home/zheda/data/flower_all/102flowers/data/image_07726.jpg
+96 [96, 100, 100, 100, 100, 100]
+/home/zheda/data/flower_all/102flowers/data/image_07729.jpg
+96 [82, 82, 82, 82, 82, 82, 82, 82, 82]
+/home/zheda/data/flower_all/102flowers/data/image_07733.jpg
+96 [89, 89, 89, 89, 89, 89, 89, 89, 59, 89, 89, 89]
+/home/zheda/data/flower_all/102flowers/data/image_07737.jpg
+96 [96, 96, 95, 96, 96, 95, 96, 96, 95, 95, 96, 95, 95, 95, 95]
+/home/zheda/data/flower_all/102flowers/data/image_07744.jpg
+96 [22, 22, 22, 22, 22, 79, 79, 79, 79, 79]
+/home/zheda/data/flower_all/102flowers/data/image_07746.jpg
+96 [39, 39, 39, 83, 77, 39, 39, 39, 39, 39, 39]
+/home/zheda/data/flower_all/102flowers/data/image_07747.jpg
+96 [22, 79, 79, 79, 79, 22, 79, 79, 79, 22]
+/home/zheda/data/flower_all/102flowers/data/image_07750.jpg
+96 [14, 14, 14, 14, 14, 14, 15]
+/home/zheda/data/flower_all/102flowers/data/image_07752.jpg
+97 [54, 54, 54, 54, 54, 94, 94, 44, 44, 44, 54, 8, 51]
+/home/zheda/data/flower_all/102flowers/data/image_07759.jpg
+97 [97, 18, 31, 18, 18, 31, 18, 18, 97, 18, 18, 18]
+/home/zheda/data/flower_all/102flowers/data/image_07773.jpg
+97 [81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 81, 0, 81, 97, 81, 97, 81, 81, 81, 97, 97, 97, 0]
+/home/zheda/data/flower_all/102flowers/data/image_07813.jpg
+97 [17, 17, 85, 31, 81, 94, 85, 17, 94, 94, 31, 94, 81, 85, 94, 31]
+/home/zheda/data/flower_all/102flowers/data/image_07839.jpg
+98 [23, 98, 23, 98, 23, 23, 23, 23, 98, 98, 23, 98, 23, 98, 20, 20, 20, 20, 20, 98, 20, 98]
+/home/zheda/data/flower_all/102flowers/data/image_07869.jpg
+98 [41, 41, 41, 41, 15, 15, 41]
+/home/zheda/data/flower_all/102flowers/data/image_07870.jpg
+98 [41, 41, 41, 41, 41, 41, 41, 41]
+/home/zheda/data/flower_all/102flowers/data/image_07885.jpg
+98 [86, 86, 86, 86]
+/home/zheda/data/flower_all/102flowers/data/image_07886.jpg
+98 [86, 86, 86, 86]
+/home/zheda/data/flower_all/102flowers/data/image_07958.jpg
+100 [7, 88]
+/home/zheda/data/flower_all/102flowers/data/image_07959.jpg
+100 [7, 7, 7, 7, 7, 7, 88, 7]
+/home/zheda/data/flower_all/102flowers/data/image_07981.jpg
+100 [10, 10, 98, 100, 10, 98, 10, 98, 100, 10, 98, 84, 98]
+/home/zheda/data/flower_all/102flowers/data/image_08047.jpg
+101 [89, 89, 89, 89, 89, 89]
+0.859489347861
+
+Process finished with exit code 0
+

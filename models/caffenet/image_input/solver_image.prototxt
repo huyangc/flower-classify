@@ -1,0 +1,14 @@
+net: "/home/zheda/workspace/cnn/flower-classify/train_val_image.prototxt"
+test_iter: 124
+test_interval: 500
+base_lr: 0.001
+lr_policy: "step"
+gamma: 0.1
+stepsize: 20000
+display: 50
+max_iter: 100000
+momentum: 0.9
+weight_decay: 0.0005
+snapshot: 0
+snapshot_prefix: "/home/zheda/workspace/cnn/flower-classify/output/default/image_input"
+solver_mode: GPU

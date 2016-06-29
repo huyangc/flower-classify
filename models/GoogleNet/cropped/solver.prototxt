@@ -1,0 +1,13 @@
+net: "models/GoogleNet/cropped/train_val.prototxt"
+display: 20
+average_loss: 40
+base_lr: 0.01
+lr_policy: "step"
+stepsize: 20000
+gamma: 0.96
+max_iter: 100000
+momentum: 0.9
+weight_decay: 0.0002
+snapshot: 0
+snapshot_prefix: "googlenet_cropped_256"
+solver_mode: GPU
